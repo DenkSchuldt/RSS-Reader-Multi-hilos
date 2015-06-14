@@ -1,9 +1,17 @@
 <resources>
-    <string name="app_name">RSS Reader</string>
+    <string name="app_name">RSS Reader Multi-hilos</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string-array name="menu_options">
+        <item>BBC</item>
+        <item>CNN</item>
+        <item>El Universo</item>
+        <item>The Telegraph</item>
+    </string-array>
 
+    <string name="drawer_open"></string>
+    <string name="drawer_close"></string>
 
     <!--
         * http://www.eluniverso.com/rss/all.xml

@@ -10,8 +10,6 @@ import com.sistemasoperativos.denny.rssreader.R;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import de.greenrobot.event.EventBus;
-
 /**
  * Created by denny on 6/11/15.
  */
