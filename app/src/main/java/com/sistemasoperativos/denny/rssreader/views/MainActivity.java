@@ -1,29 +1,35 @@
 package com.sistemasoperativos.denny.rssreader.views;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sistemasoperativos.denny.rssreader.R;
+import com.sistemasoperativos.denny.rssreader.models.Producer;
+import com.sistemasoperativos.denny.rssreader.views.adapters.ProducersAdapter;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private ViewHolder viewHolder;
     private ActionBarDrawerToggle drawerToggle;
+    private ProducersAdapter producersAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,22 +95,46 @@ public class MainActivity extends AppCompatActivity {
         tintManager.setTintColor(Color.TRANSPARENT);
     }
 
+    public void createProducer() {
+
+    }
+
+    public void deleteProducer() {
+
+    }
+
     private class ViewHolder {
 
         private DrawerLayout drawerLayout;
-        private ListView drawerList;
         private Toolbar toolbar;
+        private ListView news_listview;
 
         public void findActivityViews() {
             drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
-            drawerList = (ListView) findViewById(R.id.left_drawer);
-            drawerList.setAdapter(new ArrayAdapter<String>(
-                MainActivity.this,
-                R.layout.drawer_list_item,
-                getResources().getStringArray(R.array.menu_options))
+            news_listview = (ListView) findViewById(R.id.news_list_view);
+            producersAdapter = new ProducersAdapter(
+                    MainActivity.this,
+                    getResources().getStringArray(R.array.section_news_name)
             );
+            news_listview.setAdapter(producersAdapter);
+            news_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    boolean status = (boolean) view.getTag();
+                    ImageView imageView = (ImageView) view.findViewById(R.id.item_action);
+                    if(status) {
+                        imageView.setImageResource(R.drawable.ic_add_black_24dp);
+                        deleteProducer();
+                    } else {
+                        imageView.setImageResource(R.drawable.ic_remove_black_24dp);
+                        createProducer();
+                    }
+                    view.setTag(!status);
+                }
+            });
         }
+
     }
 
 }

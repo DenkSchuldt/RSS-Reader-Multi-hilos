@@ -3,7 +3,14 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string-array name="menu_options">
+
+    <array name="section_news_logo">
+        <item>drawable/bbc_logo</item>
+        <item>drawable/cnn_logo</item>
+        <item>drawable/eluniverso_logo</item>
+        <item>drawable/telegraph_logo</item>
+    </array>
+    <string-array name="section_news_name">
         <item>BBC</item>
         <item>CNN</item>
         <item>El Universo</item>
@@ -12,6 +19,11 @@
 
     <string name="drawer_open"></string>
     <string name="drawer_close"></string>
+
+    <string name="section_news">Noticias</string>
+    <string name="section_tech">Tecnología</string>
+    <string name="section_art">Arte</string>
+    <string name="section_music">Música</string>
 
     <!--
         * http://www.eluniverso.com/rss/all.xml
