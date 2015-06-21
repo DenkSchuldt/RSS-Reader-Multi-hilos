@@ -1,29 +1,25 @@
 <resources>
     <string name="app_name">RSS Reader Multi-hilos</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="actionbar.title.main">Últimas noticias</string>
+    <string name="actionbar.title.scheduled">Noticias guardadas</string>
+    <string name="actionbar.title.settings">Configuraciones</string>
 
-    <array name="section_news_logo">
-        <item>drawable/bbc_logo</item>
-        <item>drawable/cnn_logo</item>
-        <item>drawable/eluniverso_logo</item>
-        <item>drawable/telegraph_logo</item>
-    </array>
-    <string-array name="section_news_name">
+    <string name="menu.action.refresh">Actualizar</string>
+    <string name="menu.action.scheduled">Noticias guardadas</string>
+    <string name="menu.action.settings">Configuraciones</string>
+
+    <string-array name="drawer_items_news">
         <item>BBC</item>
         <item>CNN</item>
         <item>El Universo</item>
         <item>The Telegraph</item>
     </string-array>
 
-    <string name="drawer_open"></string>
-    <string name="drawer_close"></string>
-
-    <string name="section_news">Noticias</string>
-    <string name="section_tech">Tecnología</string>
-    <string name="section_art">Arte</string>
-    <string name="section_music">Música</string>
+    <string name="drawer.item.news">Noticias</string>
+    <string name="drawer.item.tech">Tecnología</string>
+    <string name="drawer.item.art">Arte</string>
+    <string name="drawer.item.music">Música</string>
 
     <!--
         * http://www.eluniverso.com/rss/all.xml
