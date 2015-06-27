@@ -3,6 +3,7 @@ package com.sistemasoperativos.denny.rssreader.views;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -64,8 +65,14 @@ public class MainActivity extends AppCompatActivity {
         animateIcon(findViewById(R.id.action_refresh));
         return true;
       case R.id.action_scheduled:
+        Intent scheduled = new Intent(this, ScheduledActivity.class);
+        startActivity(scheduled);
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
         return true;
       case R.id.action_settings:
+        Intent settings = new Intent(this, SettingsActivity.class);
+        startActivity(settings);
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
         return true;
       default:
     }
