@@ -21,6 +21,10 @@
     <string name="drawer.item.art">Arte</string>
     <string name="drawer.item.music">Música</string>
 
+    <string name="settings.section.general">General</string>
+    <string name="settings.time.title">Tiempo para obtener nuevas noticias</string>
+    <string name="settings.time.unit">minutos</string>
+
     <!--
         * http://www.eluniverso.com/rss/all.xml
         * http://www.bbc.com/mundo/index.xml

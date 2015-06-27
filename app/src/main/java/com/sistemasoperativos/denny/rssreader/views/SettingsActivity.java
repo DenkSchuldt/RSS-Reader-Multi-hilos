@@ -6,9 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sistemasoperativos.denny.rssreader.R;
+import com.sistemasoperativos.denny.rssreader.dialogfragments.FetchDialogFragment;
 
 /**
  * Created by denny on 27/06/15.
@@ -26,6 +28,8 @@ public class SettingsActivity extends AppCompatActivity {
     setCustomActionBar();
     setCustomStatusBar();
   }
+
+
 
   @Override
   public void onBackPressed() {
@@ -59,12 +63,25 @@ public class SettingsActivity extends AppCompatActivity {
   /**
   *
   */
-  private class ViewHolder {
+  private class ViewHolder implements View.OnClickListener{
 
     private Toolbar toolbar;
+    private LinearLayout fetchContentTime;
 
     public void findActivityViews() {
       toolbar = (Toolbar) findViewById(R.id.toolbar);
+      fetchContentTime = (LinearLayout) findViewById(R.id.settings_fetch_content_time);
+      fetchContentTime.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+      switch (v.getId()) {
+        case R.id.settings_fetch_content_time:
+          FetchDialogFragment fdf = new FetchDialogFragment();
+          fdf.show(getSupportFragmentManager(), "");
+          break;
+      }
     }
   }
 
