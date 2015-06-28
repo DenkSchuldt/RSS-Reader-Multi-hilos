@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">RSS Reader Multi-hilos</string>
+    <string name="shared.preferences.key">com.sistemasoperativos.denny.rssreader</string>
+    <string name="shared.preferences.settings.time">settings</string>
 
     <string name="actionbar.title.main">Últimas noticias</string>
     <string name="actionbar.title.scheduled">Noticias guardadas</string>
@@ -23,7 +25,8 @@
 
     <string name="settings.section.general">General</string>
     <string name="settings.time.title">Tiempo para obtener nuevas noticias</string>
-    <string name="settings.time.unit">minutos</string>
+    <string name="settings.time.unit.singular">minuto</string>
+    <string name="settings.time.unit.plural">minutos</string>
 
     <!--
         * http://www.eluniverso.com/rss/all.xml
