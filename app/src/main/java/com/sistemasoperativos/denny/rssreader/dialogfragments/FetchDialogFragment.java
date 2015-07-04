@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.NumberPicker;
 
-import com.sistemasoperativos.denny.rssreader.OnSettingsEvent;
+import com.sistemasoperativos.denny.rssreader.interfaces.OnSettingsEvent;
 import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.views.SettingsActivity;
 

@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
-import com.sistemasoperativos.denny.rssreader.OnSettingsEvent;
+import com.sistemasoperativos.denny.rssreader.interfaces.OnSettingsEvent;
 import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.dialogfragments.FetchDialogFragment;
 

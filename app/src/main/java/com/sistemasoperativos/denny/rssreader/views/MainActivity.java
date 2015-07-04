@@ -1,7 +1,5 @@
 package com.sistemasoperativos.denny.rssreader.views;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -20,9 +18,15 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sistemasoperativos.denny.rssreader.R;
+import com.sistemasoperativos.denny.rssreader.database.DBHelper;
+import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
+import com.sistemasoperativos.denny.rssreader.models.Producer;
 import com.sistemasoperativos.denny.rssreader.views.adapters.ProducersAdapter;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
   private ViewHolder viewHolder;
   private ActionBarDrawerToggle drawerToggle;
   private ProducersAdapter producersAdapter;
+
+  private ArrayList<Producer> producers;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
     setCustomDrawerToggle();
     setCustomActionBar();
     setCustomStatusBar();
+
+    DBHelper helper = OpenHelperManager.getHelper(MainActivity.this, DBHelper.class);
+    ProducerDB producerDB = new ProducerDB(helper);
+    ArrayList<Producer> producers = producerDB.getProducers();
+    for(Producer p : producers) {
+      System.out.println(p);
+    }
   }
 
   @Override
@@ -120,10 +133,6 @@ public class MainActivity extends AppCompatActivity {
     tintManager.setTintColor(Color.TRANSPARENT);
   }
 
-  public void createProducer() {}
-
-  public void deleteProducer() {}
-
   public void animateIcon(final View view) {
     int refreshTime = 750;
     actionRefresh = ObjectAnimator.ofFloat(view, "rotation", 0.0f, 360f);
@@ -147,22 +156,13 @@ public class MainActivity extends AppCompatActivity {
       news_listview = (ListView) findViewById(R.id.news_list_view);
       producersAdapter = new ProducersAdapter(
         MainActivity.this,
-        getResources().getStringArray(R.array.drawer_items_news)
+        getResources().getStringArray(R.array.drawer_items_news),
+        getResources().getStringArray(R.array.drawer_items_types)
       );
       news_listview.setAdapter(producersAdapter);
       news_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-          boolean status = (boolean) view.getTag();
-          ImageView imageView = (ImageView) view.findViewById(R.id.item_action);
-          if(status) {
-            imageView.setImageResource(R.drawable.ic_add_black_24dp);
-            deleteProducer();
-          } else {
-            imageView.setImageResource(R.drawable.ic_remove_black_24dp);
-            createProducer();
-          }
-          view.setTag(!status);
         }
       });
     }
