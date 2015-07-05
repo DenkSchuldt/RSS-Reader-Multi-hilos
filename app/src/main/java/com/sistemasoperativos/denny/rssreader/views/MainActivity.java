@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
   private ViewHolder viewHolder;
   private ActionBarDrawerToggle drawerToggle;
   private ProducersAdapter producersAdapter;
+  private ProducerDB producerDB;
 
   private ArrayList<Producer> producers;
 
@@ -42,18 +43,16 @@ public class MainActivity extends AppCompatActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    DBHelper helper = OpenHelperManager.getHelper(MainActivity.this, DBHelper.class);
+    producerDB = new ProducerDB(helper);
+    producers = producerDB.getProducers();
+
     viewHolder = new ViewHolder();
     viewHolder.findActivityViews();
     setCustomDrawerToggle();
     setCustomActionBar();
     setCustomStatusBar();
-
-    DBHelper helper = OpenHelperManager.getHelper(MainActivity.this, DBHelper.class);
-    ProducerDB producerDB = new ProducerDB(helper);
-    ArrayList<Producer> producers = producerDB.getProducers();
-    for(Producer p : producers) {
-      System.out.println(p);
-    }
   }
 
   @Override
@@ -154,15 +153,19 @@ public class MainActivity extends AppCompatActivity {
       drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
       toolbar = (Toolbar) findViewById(R.id.toolbar);
       news_listview = (ListView) findViewById(R.id.news_list_view);
-      producersAdapter = new ProducersAdapter(
-        MainActivity.this,
-        getResources().getStringArray(R.array.drawer_items_news),
-        getResources().getStringArray(R.array.drawer_items_types)
-      );
+      producersAdapter = new ProducersAdapter(MainActivity.this, producers);
       news_listview.setAdapter(producersAdapter);
       news_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+          ImageView item_action = (ImageView) view.findViewById(R.id.item_action);
+          Producer producer = producers.get(position);
+          producer.setActive(!producer.isActive());
+          if (producer.isActive())
+            item_action.setImageResource(R.drawable.ic_remove_black_24dp);
+          else
+            item_action.setImageResource(R.drawable.ic_add_black_24dp);
+          producerDB.saveProducer(producer);
         }
       });
     }

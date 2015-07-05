@@ -9,35 +9,35 @@ public class Producer {
 
   private static final String ID = "_id";
   private static final String URL = "url";
-  private static final String TYPE = "type";
+  private static final String NAME = "name";
   private static final String ACTIVE = "active";
 
   @DatabaseField(generatedId = true, columnName = ID)
   private int id;
   @DatabaseField(columnName = URL)
   private String url;
-  @DatabaseField(columnName = TYPE)
-  private int type;
+  @DatabaseField(columnName = NAME)
+  private String name;
   @DatabaseField(columnName = ACTIVE)
   private boolean active;
 
   public Producer() {
     this.id = 0;
     this.url = "";
-    this.type = -1;
+    this.name = "";
     this.active = false;
   }
 
-  public Producer(String url, int type, boolean active) {
+  public Producer(String url, String name, boolean active) {
     this.url = url;
-    this.type = type;
+    this.name = name;
     this.active = active;
   }
 
-  public Producer(int id, String url, int type, boolean active) {
+  public Producer(int id, String url, String name, boolean active) {
     this.id = id;
     this.url = url;
-    this.type = type;
+    this.name = name;
     this.active = active;
   }
 
@@ -49,8 +49,8 @@ public class Producer {
     return url;
   }
 
-  public int getType() {
-    return type;
+  public String getName() {
+    return name;
   }
 
   public boolean isActive() {
@@ -65,7 +65,7 @@ public class Producer {
   public String toString() {
     return "Producer: {\n" +
         "Url: " + this.url + "\n" +
-        "Type: " + this.type + "\n" +
+        "Name: " + this.name + "\n" +
         "Active: " + this.active + "\n" +
         "}\n\n";
   }

@@ -9,23 +9,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sistemasoperativos.denny.rssreader.R;
+import com.sistemasoperativos.denny.rssreader.models.Producer;
+import com.sistemasoperativos.denny.rssreader.utils.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by denny on 16/06/15.
  */
-public class ProducersAdapter extends ArrayAdapter<String> {
+public class ProducersAdapter extends ArrayAdapter<Producer> {
 
   private Context context;
-  private String[] producers;
-  private String[] types;
+  private ArrayList<Producer> producers;
 
-  public ProducersAdapter(Context context, String[] producers, String[] types) {
+  public ProducersAdapter(Context context, ArrayList<Producer> producers) {
     super(context, -1, producers);
     this.context = context;
     this.producers = producers;
-    this.types = types;
   }
 
   @Override
@@ -34,24 +35,29 @@ public class ProducersAdapter extends ArrayAdapter<String> {
     View root = inflater.inflate(R.layout.view_drawer_item, parent, false);
     ImageView item_logo = (ImageView) root.findViewById(R.id.item_logo);
     TextView item_name = (TextView) root.findViewById(R.id.item_name);
+    ImageView item_action = (ImageView) root.findViewById(R.id.item_action);
 
-    switch (position) {
-      case 0:
-        item_logo.setImageResource(R.drawable.bbc_logo);
-        break;
-      case 1:
-        item_logo.setImageResource(R.drawable.cnn_logo);
-        break;
-      case 2:
+    Producer producer = producers.get(position);
+    switch (producer.getName()) {
+      case Constants.ELUNIVERSO:
         item_logo.setImageResource(R.drawable.eluniverso_logo);
         break;
-      case 3:
+      case Constants.BBC:
+        item_logo.setImageResource(R.drawable.bbc_logo);
+        break;
+      case Constants.CNN:
+        item_logo.setImageResource(R.drawable.cnn_logo);
+        break;
+      case Constants.TELEGRAPH:
         item_logo.setImageResource(R.drawable.telegraph_logo);
         break;
     }
-
-    item_name.setText(producers[position]);
-    root.setTag(types[position]);
+    item_name.setText(producer.getName());
+    if (producer.isActive())
+      item_action.setImageResource(R.drawable.ic_remove_black_24dp);
+    else
+      item_action.setImageResource(R.drawable.ic_add_black_24dp);
+    root.setTag(producer);
     return root;
   }
 }

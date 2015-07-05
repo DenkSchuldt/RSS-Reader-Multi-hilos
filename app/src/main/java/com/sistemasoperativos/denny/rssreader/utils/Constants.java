@@ -5,10 +5,10 @@ package com.sistemasoperativos.denny.rssreader.utils;
  */
 public interface Constants {
 
-  public static final int ELUNIVERSO_TYPE = 0;
-  public static final int BBC_TYPE = 1;
-  public static final int CNN_TYPE = 2;
-  public static final int TELEGRAPH_TYPE = 3;
+  public static final String ELUNIVERSO = "El Universo";
+  public static final String BBC = "BBC";
+  public static final String CNN = "CNN";
+  public static final String TELEGRAPH = "Telegraph";
 
   public static final String ELUNIVERSO_URL = "http://www.eluniverso.com/rss/all.xml";
   public static final String BBC_URL = "http://www.bbc.com/mundo/index.xml";
