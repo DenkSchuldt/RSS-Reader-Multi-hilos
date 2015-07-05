@@ -5,7 +5,9 @@
     <color name="black">#111111</color>
     <color name="teal">#009688</color>
 
-    <color name="content">#87000000</color>
-    <color name="content_section">#54000000</color>
+    <color name="subheader">#54000000</color>
+
+    <color name="primary">#87000000</color>
+    <color name="secondary">#54000000</color>
 
 </resources>

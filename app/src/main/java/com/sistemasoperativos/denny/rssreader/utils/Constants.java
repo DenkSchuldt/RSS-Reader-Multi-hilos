@@ -5,6 +5,11 @@ package com.sistemasoperativos.denny.rssreader.utils;
  */
 public interface Constants {
 
+  public static final String NEWS = "news";
+  public static final String TECH = "tech";
+  public static final String ART = "art";
+  public static final String MUSIC = "music";
+
   public static final String ELUNIVERSO = "El Universo";
   public static final String BBC = "BBC";
   public static final String CNN = "CNN";

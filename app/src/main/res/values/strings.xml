@@ -22,4 +22,7 @@
     <string name="settings.time.unit.singular">minuto</string>
     <string name="settings.time.unit.plural">minutos</string>
 
+    <string name="font.regular">sans-serif</string>
+    <string name="font.medium">sans-serif-medium</string>
+
 </resources>

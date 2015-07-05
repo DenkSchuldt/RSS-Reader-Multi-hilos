@@ -40,18 +40,22 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       Producer eluniverso = new Producer(
           Constants.ELUNIVERSO_URL,
           Constants.ELUNIVERSO,
+          Constants.NEWS,
           false);
       Producer bbc = new Producer(
           Constants.BBC_URL,
           Constants.BBC,
+          Constants.NEWS,
           false);
       Producer cnn = new Producer(
           Constants.CNN_URL,
           Constants.CNN,
+          Constants.NEWS,
           false);
       Producer telegraph = new Producer(
           Constants.TELEGRAPH_URL,
           Constants.TELEGRAPH,
+          Constants.NEWS,
           false);
       producerDao.createOrUpdate(eluniverso);
       producerDao.createOrUpdate(bbc);

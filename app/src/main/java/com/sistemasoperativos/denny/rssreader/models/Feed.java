@@ -7,14 +7,14 @@ import com.j256.ormlite.field.DatabaseField;
  */
 public class Feed {
 
-  private static final String ID = "_id";
-  private static final String SCHEDULED = "scheduled";
-  private static final String TITLE = "title";
-  private static final String URL = "url";
-  private static final String DESCRIPTION = "description";
-  private static final String IMGURL = "imgurl";
-  private static final String VIDEOURL = "videourl";
-  private static final String PUBDATE = "pubdate";
+  public static final String ID = "_id";
+  public static final String SCHEDULED = "scheduled";
+  public static final String TITLE = "title";
+  public static final String URL = "url";
+  public static final String DESCRIPTION = "description";
+  public static final String IMGURL = "imgurl";
+  public static final String VIDEOURL = "videourl";
+  public static final String PUBDATE = "pubdate";
 
   @DatabaseField(generatedId = true, columnName = ID)
   private int id;

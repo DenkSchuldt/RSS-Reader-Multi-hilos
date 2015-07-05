@@ -2,21 +2,13 @@ package com.sistemasoperativos.denny.rssreader.views;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sistemasoperativos.denny.rssreader.R;
-import com.sistemasoperativos.denny.rssreader.views.adapters.ProducersAdapter;
 
 /**
  * Created by denny on 27/06/15.

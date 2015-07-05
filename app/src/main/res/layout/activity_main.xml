@@ -12,7 +12,7 @@
             android:id="@+id/toolbar"
             android:layout_marginTop="24dp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/subtitle"/>
+            android:layout_height="@dimen/toolbar.height"/>
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_below="@+id/toolbar"
@@ -20,6 +20,6 @@
             android:layout_height="match_parent"/>
     </RelativeLayout>
 
-    <include layout="@layout/view_navigation_drawer"/>
+    <include layout="@layout/navigation_drawer"/>
 
 </android.support.v4.widget.DrawerLayout>
