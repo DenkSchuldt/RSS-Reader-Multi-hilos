@@ -138,7 +138,7 @@ public class Feed {
 
   @Override
   public String toString() {
-    return "Feed: {" +
+    return "Feed: {" + "\n" +
         "title: " + title + "\n" +
         "URL: " + url + "\n" +
         "description: " + description + "\n" +

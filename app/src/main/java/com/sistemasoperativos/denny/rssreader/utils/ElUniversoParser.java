@@ -18,8 +18,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
  */
 public class ElUniversoParser {
 
-  private static final String ns = null;
-
   private static final String ITEM = "item";
   private static final String TITLE = "title";
   private static final String LINK = "link";
@@ -64,6 +62,6 @@ public class ElUniversoParser {
     } catch (Exception e) {
       System.out.println(e);
     }
-    return new ArrayList<>();
+    return feeds;
   }
 }
