@@ -25,12 +25,22 @@ import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.database.DBHelper;
 import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
 import com.sistemasoperativos.denny.rssreader.models.Producer;
+import com.sistemasoperativos.denny.rssreader.network.GetFeeds;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
+import com.sistemasoperativos.denny.rssreader.utils.ElUniversoParser;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.SAXParserFactory;
 
 
 public class MainActivity extends AppCompatActivity {
+
+  public static final String TAG = "MainActivity";
 
   private ViewHolder viewHolder;
   private ActionBarDrawerToggle drawerToggle;
@@ -98,6 +108,23 @@ public class MainActivity extends AppCompatActivity {
     return super.onCreateOptionsMenu(menu);
   }
 
+  public void activateProducer(final Producer producer) {
+    Thread thread = new Thread(new Runnable(){
+      @Override
+      public void run() {
+        try {
+          GetFeeds get = new GetFeeds();
+          String xml = get.getFeeds(producer.getUrl());
+          InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+          List feeds = new ElUniversoParser().parse(is);
+          System.out.println(feeds);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    });
+    thread.start();
+  }
 
   /**
    *
@@ -153,10 +180,12 @@ public class MainActivity extends AppCompatActivity {
             Producer producer = (Producer) v.getTag();
             ImageView item_action = (ImageView) v.findViewById(R.id.item_action);
             producer.setActive(!producer.isActive());
-            if (producer.isActive())
+            if (producer.isActive()) {
               item_action.setImageResource(R.drawable.ic_remove_black_24dp);
-            else
+              activateProducer(producer);
+            } else {
               item_action.setImageResource(R.drawable.ic_add_black_24dp);
+            }
             producerDB.saveProducer(producer);
           }
         });

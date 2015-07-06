@@ -136,4 +136,14 @@ public class Feed {
     this.pubDate = pubDate;
   }
 
+  @Override
+  public String toString() {
+    return "Feed: {" +
+        "title: " + title + "\n" +
+        "URL: " + url + "\n" +
+        "description: " + description + "\n" +
+        "ImgUrl: " + imgurl + "\n" +
+        "PubDate: " + pubDate + "\n" +
+        "}";
+  }
 }
