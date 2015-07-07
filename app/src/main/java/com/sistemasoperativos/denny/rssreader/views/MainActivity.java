@@ -30,6 +30,7 @@ import com.sistemasoperativos.denny.rssreader.network.GetFeeds;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
 import com.sistemasoperativos.denny.rssreader.utils.ElUniversoParser;
 import com.sistemasoperativos.denny.rssreader.utils.BBCParser;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -62,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
     viewHolder.setCustomDrawerToggle();
     viewHolder.setCustomActionBar();
     viewHolder.setCustomStatusBar();
+
+    for (Producer producer: producers) {
+      if (producer.isActive())
+        activateProducer(producer);
+    }
+
   }
 
   @Override
@@ -130,6 +137,14 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
           e.printStackTrace();
         }
+        runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            for (Feed feed : feeds) {
+              viewHolder.createCard(feed);
+            }
+          }
+        });
       }
     });
     thread.start();
@@ -142,12 +157,14 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
+    private LinearLayout entries;
     private LinearLayout drawerListNews;
     private ObjectAnimator objectAnimator;
 
     public void findActivityViews() {
       drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-      toolbar = (Toolbar) findViewById(R.id.toolbar);
+      toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+      entries = (LinearLayout) findViewById(R.id.main_entries);
       drawerListNews = (LinearLayout) findViewById(R.id.drawer_list_news);
     }
 
@@ -240,10 +257,30 @@ public class MainActivity extends AppCompatActivity {
     public void refreshAnimation() {
         int refreshTime = 750;
         objectAnimator = ObjectAnimator.ofFloat(findViewById(R.id.menu_item_refresh), "rotation", 0.0f, 360f);
-        objectAnimator.setDuration(refreshTime);
+      objectAnimator.setDuration(refreshTime);
         objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
         objectAnimator.start();
     }
+
+    public void createCard(Feed feed) {
+      View card = getLayoutInflater().inflate(R.layout.entry, entries, false);
+
+      TextView title = (TextView) card.findViewById(R.id.entry_title);
+      TextView source = (TextView) card.findViewById(R.id.entry_source);
+      TextView time = (TextView) card.findViewById(R.id.entry_time);
+      ImageView media = (ImageView) card.findViewById(R.id.entry_media);
+
+      title.setText(feed.getTitle());
+      time.setText(feed.getPubDate());
+      if (!feed.getImgurl().isEmpty()) {
+        Picasso.with(MainActivity.this).load(feed.getImgurl()).into(media);
+      } else {
+        media.setVisibility(View.GONE);
+      }
+
+      entries.addView(card);
+    }
+
   }
 
 }
