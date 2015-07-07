@@ -1,11 +1,14 @@
 package com.sistemasoperativos.denny.rssreader.models;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.sistemasoperativos.denny.rssreader.views.SettingsActivity;
+
+import java.io.Serializable;
 
 /**
  * Created by denny on 6/11/15.
  */
-public class Feed {
+public class Feed implements Serializable {
 
   public static final String ID = "_id";
   public static final String SCHEDULED = "scheduled";
@@ -15,6 +18,7 @@ public class Feed {
   public static final String IMGURL = "imgurl";
   public static final String VIDEOURL = "videourl";
   public static final String PUBDATE = "pubdate";
+  public static final String SOURCE = "source";
 
   @DatabaseField(generatedId = true, columnName = ID)
   private int id;
@@ -32,6 +36,8 @@ public class Feed {
   private String videourl;
   @DatabaseField(columnName = PUBDATE)
   private String pubDate;
+  @DatabaseField(columnName = PUBDATE)
+  private String source;
 
   public Feed() {
     this.id = 0;
@@ -42,6 +48,7 @@ public class Feed {
     this.imgurl = "";
     this.videourl = "";
     this.pubDate = "";
+    this.source = "";
   }
 
   public Feed(
@@ -51,7 +58,8 @@ public class Feed {
       String description,
       String imgurl,
       String videourl,
-      String pubDate) {
+      String pubDate,
+      String source) {
     this.scheduled = scheduled;
     this.title = title;
     this.url = url;
@@ -59,6 +67,7 @@ public class Feed {
     this.imgurl = imgurl;
     this.videourl = videourl;
     this.pubDate = pubDate;
+    this.source = source;
   }
 
   public Feed(
@@ -69,7 +78,8 @@ public class Feed {
       String description,
       String imgurl,
       String videourl,
-      String pubDate) {
+      String pubDate,
+      String source) {
     this.id = id;
     this.scheduled = scheduled;
     this.title = title;
@@ -78,6 +88,7 @@ public class Feed {
     this.imgurl = imgurl;
     this.videourl = videourl;
     this.pubDate = pubDate;
+    this.source = source;
   }
 
   public int getId() {
@@ -136,6 +147,13 @@ public class Feed {
     this.pubDate = pubDate;
   }
 
+  public String getSource() {
+    return source;
+  }
+  public void setSource(String source) {
+    this.source = source;
+  }
+
   @Override
   public String toString() {
     return "Feed: {" + "\n" +
@@ -144,6 +162,7 @@ public class Feed {
         "description: " + description + "\n" +
         "ImgUrl: " + imgurl + "\n" +
         "PubDate: " + pubDate + "\n" +
+        "Source: " + source + "\n" +
         "}";
   }
 }

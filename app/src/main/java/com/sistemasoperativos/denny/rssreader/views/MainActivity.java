@@ -24,6 +24,8 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.database.DBHelper;
 import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
+import com.sistemasoperativos.denny.rssreader.dialogfragments.EntryDialogFragment;
+import com.sistemasoperativos.denny.rssreader.dialogfragments.FetchDialogFragment;
 import com.sistemasoperativos.denny.rssreader.models.Feed;
 import com.sistemasoperativos.denny.rssreader.models.Producer;
 import com.sistemasoperativos.denny.rssreader.network.GetFeeds;
@@ -262,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
         objectAnimator.start();
     }
 
-    public void createCard(Feed feed) {
+    public void createCard(final Feed entry) {
       View card = getLayoutInflater().inflate(R.layout.entry, entries, false);
 
       TextView title = (TextView) card.findViewById(R.id.entry_title);
@@ -270,13 +272,22 @@ public class MainActivity extends AppCompatActivity {
       TextView time = (TextView) card.findViewById(R.id.entry_time);
       ImageView media = (ImageView) card.findViewById(R.id.entry_media);
 
-      title.setText(feed.getTitle());
-      time.setText(feed.getPubDate());
-      if (!feed.getImgurl().isEmpty()) {
-        Picasso.with(MainActivity.this).load(feed.getImgurl()).into(media);
+      title.setText(entry.getTitle());
+      source.setText(entry.getSource());
+      time.setText(entry.getPubDate());
+      if (!entry.getImgurl().isEmpty()) {
+        Picasso.with(MainActivity.this).load(entry.getImgurl()).into(media);
       } else {
         media.setVisibility(View.GONE);
       }
+
+      card.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          EntryDialogFragment edf = EntryDialogFragment.newInstance(entry);
+          edf.show(getSupportFragmentManager(), "");
+        }
+      });
 
       entries.addView(card);
     }

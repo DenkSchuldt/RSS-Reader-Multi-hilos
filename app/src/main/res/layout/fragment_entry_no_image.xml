@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/entry.detailed.title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/list.item.primary.text"
+                android:textColor="@color/black"
+                android:layout_margin="@dimen/margin"
+                android:textStyle="bold"/>
+            <com.pkmmte.view.CircularImageView
+                android:id="@+id/entry.detailed.source.logo"
+                android:layout_below="@+id/entry.detailed.title"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="@dimen/margin"/>
+
+            <TextView
+                android:id="@+id/entry.detailed.source.name"
+                android:layout_below="@+id/entry.detailed.source.logo"
+                android:layout_toRightOf="@+id/entry.detailed.source.logo"
+                android:layout_marginTop="-20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/entry.detailed.description"
+                android:layout_below="@+id/entry.detailed.source.logo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin"/>
+
+            <TextView
+                android:id="@+id/entry.detailed.time"
+                android:layout_below="@+id/entry.detailed.description"
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginRight="@dimen/margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_below="@+id/entry.detailed.time"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dialog.area.buttons.height"
+                android:padding="@dimen/dialog.area.buttons.padding"
+                android:gravity="right">
+                <Button
+                    android:id="@+id/entry.detailed.close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button.height"
+                    android:text="Cerrar"
+                    android:layout_marginRight="@dimen/button.padding"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:background="@null"
+                    android:textSize="@dimen/text.button"
+                    android:textColor="@color/teal"/>
+                <Button
+                    android:id="@+id/entry.detailed.more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button.height"
+                    android:text="Leer más"
+                    android:padding="@dimen/button.padding"
+                    android:gravity="center"
+                    android:background="@null"
+                    android:textSize="@dimen/text.button"
+                    android:textColor="@color/teal"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

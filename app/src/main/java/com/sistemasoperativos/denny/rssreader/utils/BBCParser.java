@@ -79,6 +79,7 @@ public class BBCParser {
               break;
           }
         }
+        feed.setSource(Constants.BBC);
         feeds.add(feed);
       }
     } catch (Exception e) {
