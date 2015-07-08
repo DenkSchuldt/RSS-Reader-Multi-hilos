@@ -6,6 +6,7 @@ package com.sistemasoperativos.denny.rssreader.utils;
 public interface Constants {
 
   public static final String ENTRY = "entry";
+  public static final String WEBVIEW = "webview";
 
   public static final String NEWS = "news";
   public static final String TECH = "tech";

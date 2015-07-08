@@ -10,7 +10,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
             <TextView
                 android:id="@+id/entry.detailed.title"
@@ -20,25 +21,29 @@
                 android:textColor="@color/black"
                 android:layout_margin="@dimen/margin"
                 android:textStyle="bold"/>
-            <com.pkmmte.view.CircularImageView
-                android:id="@+id/entry.detailed.source.logo"
-                android:layout_below="@+id/entry.detailed.title"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="@dimen/margin"/>
 
-            <TextView
-                android:id="@+id/entry.detailed.source.name"
-                android:layout_below="@+id/entry.detailed.source.logo"
-                android:layout_toRightOf="@+id/entry.detailed.source.logo"
-                android:layout_marginTop="-20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <RelativeLayout
+                android:id="@+id/entry.detailed.source"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/entry.detailed.title">
+                <com.pkmmte.view.CircularImageView
+                    android:id="@+id/entry.detailed.source.logo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="@dimen/margin"/>
+                <TextView
+                    android:id="@+id/entry.detailed.source.name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_toRightOf="@+id/entry.detailed.source.logo"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"/>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/entry.detailed.description"
-                android:layout_below="@+id/entry.detailed.source.logo"
+                android:layout_below="@+id/entry.detailed.source"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin"/>

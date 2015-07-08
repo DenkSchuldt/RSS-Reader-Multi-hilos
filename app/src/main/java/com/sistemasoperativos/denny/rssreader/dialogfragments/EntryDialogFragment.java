@@ -2,7 +2,12 @@ package com.sistemasoperativos.denny.rssreader.dialogfragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -20,8 +25,10 @@ import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.interfaces.OnSettingsEvent;
 import com.sistemasoperativos.denny.rssreader.models.Feed;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
+import com.sistemasoperativos.denny.rssreader.utils.Utils;
 import com.sistemasoperativos.denny.rssreader.views.MainActivity;
 import com.sistemasoperativos.denny.rssreader.views.SettingsActivity;
+import com.sistemasoperativos.denny.rssreader.views.WebActivity;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -30,6 +37,7 @@ import com.squareup.picasso.Picasso;
 public class EntryDialogFragment extends DialogFragment {
 
   private Feed entry;
+  private Point displaySize;
   private ViewHolder viewHolder;
 
   public static EntryDialogFragment newInstance(Feed entry) {
@@ -44,6 +52,7 @@ public class EntryDialogFragment extends DialogFragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
     entry = getEntryFromArguments();
+    displaySize = Utils.getDisplaySize(getActivity());
     if (entry.getImgurl().isEmpty()) {
       viewHolder = new ViewHolder(inflater.inflate(R.layout.fragment_entry_no_image, container, false));
     } else {
@@ -55,10 +64,44 @@ public class EntryDialogFragment extends DialogFragment {
     return viewHolder.root;
   }
 
+  @Override
+  public void onViewCreated(View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    setCustomDialogSize();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    setCustomDialogSize();
+  }
+
+  /**
+   *
+   */
+  public void setCustomDialogSize() {
+    ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+    if (Utils.orientationIsPortrait(getActivity())) {
+      params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+      params.height = (int) getResources().getDimension(R.dimen.dialog_height);
+    } else if (Utils.orientationIsLandscape(getActivity())){
+      params.width = (int) getResources().getDimension(R.dimen.dialog_width);
+      params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+    }
+    getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+    getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+  }
+
+  /**
+   *
+   */
   public Feed getEntryFromArguments() {
     return (Feed) getArguments().getSerializable(Constants.ENTRY);
   }
 
+  /**
+   *
+   */
   public void updateContent() {
     if (!entry.getImgurl().isEmpty())
       Picasso.with(getActivity()).load(entry.getImgurl()).into(viewHolder.img);
@@ -76,6 +119,9 @@ public class EntryDialogFragment extends DialogFragment {
     viewHolder.time.setText(entry.getPubDate());
   }
 
+  /**
+   *
+   */
   public class ViewHolder implements View.OnClickListener {
 
     public View root;
@@ -115,6 +161,9 @@ public class EntryDialogFragment extends DialogFragment {
           dismiss();
           break;
         case R.id.entry_detailed_more:
+          Intent web = new Intent(getActivity(), WebActivity.class);
+          web.putExtra(Constants.ENTRY, entry);
+          startActivity(web);
           dismiss();
           break;
       }

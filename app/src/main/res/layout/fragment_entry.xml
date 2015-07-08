@@ -10,12 +10,14 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
             <ImageView
                 android:id="@+id/entry.detailed.img"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxHeight="@dimen/dialog.height"
                 android:scaleType="fitXY"
                 android:adjustViewBounds="true"/>
             <TextView

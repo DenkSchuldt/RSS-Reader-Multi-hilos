@@ -38,6 +38,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".views.MainActivity" />
         </activity>
+        <activity
+            android:name=".views.WebActivity"
+            android:label="@string/app_name">
+        </activity>
 
     </application>
 

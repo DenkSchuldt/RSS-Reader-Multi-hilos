@@ -25,13 +25,12 @@ import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.database.DBHelper;
 import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
 import com.sistemasoperativos.denny.rssreader.dialogfragments.EntryDialogFragment;
-import com.sistemasoperativos.denny.rssreader.dialogfragments.FetchDialogFragment;
 import com.sistemasoperativos.denny.rssreader.models.Feed;
 import com.sistemasoperativos.denny.rssreader.models.Producer;
 import com.sistemasoperativos.denny.rssreader.network.GetFeeds;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
-import com.sistemasoperativos.denny.rssreader.utils.ElUniversoParser;
-import com.sistemasoperativos.denny.rssreader.utils.BBCParser;
+import com.sistemasoperativos.denny.rssreader.parsers.ElUniversoParser;
+import com.sistemasoperativos.denny.rssreader.parsers.BBCParser;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;

@@ -34,5 +34,7 @@
     <dimen name="dialog.area.buttons.height">52dp</dimen>
     <dimen name="dialog.area.buttons.padding">8dp</dimen>
     <dimen name="dialog.tittle.padding.bottom">20dp</dimen>
+    <dimen name="dialog.width">300dp</dimen>
+    <dimen name="dialog.height">300dp</dimen>
 
 </resources>
