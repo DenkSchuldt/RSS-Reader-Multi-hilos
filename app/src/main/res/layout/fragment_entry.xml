@@ -31,10 +31,20 @@
             <com.pkmmte.view.CircularImageView
                 android:id="@+id/entry.detailed.source.logo"
                 android:layout_below="@+id/entry.detailed.img"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="-20dp"
+                android:layout_marginLeft="@dimen/margin"/>
+            <com.pkmmte.view.CircularImageView
+                android:id="@+id/entry.detailed.schedule"
+                android:layout_below="@+id/entry.detailed.img"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_schedule_black_48dp"
+                android:layout_alignParentRight="true"
                 android:layout_marginTop="-25dp"
-                android:layout_marginLeft="@dimen/margin"/>
+                android:layout_marginRight="@dimen/margin"/>
 
             <TextView
                 android:id="@+id/entry.detailed.source.name"

@@ -3,14 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/scheduled.toolbar"
         android:layout_marginTop="24dp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar.height"/>
-    <FrameLayout
-        android:id="@+id/content_frame"
-        android:layout_below="@+id/toolbar"
+    <ScrollView
+        android:layout_below="@+id/scheduled.toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/scheduled.entries"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </ScrollView>
+
 </RelativeLayout>

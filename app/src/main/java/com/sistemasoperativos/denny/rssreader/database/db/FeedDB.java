@@ -3,6 +3,7 @@ package com.sistemasoperativos.denny.rssreader.database.db;
 import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.sistemasoperativos.denny.rssreader.database.DBHelper;
 import com.sistemasoperativos.denny.rssreader.models.Feed;
 
@@ -58,6 +59,18 @@ public class FeedDB {
       e.printStackTrace();
     }
     return new ArrayList<Feed>();
+  }
+
+  public ArrayList<Feed> getScheduledFeeds() {
+    ArrayList<Feed> feeds = new ArrayList<>();
+    QueryBuilder b = feedDao.queryBuilder();
+    try {
+      b.where().eq(Feed.SCHEDULED, Boolean.TRUE);
+      feeds.addAll(feedDao.query(b.prepare()));
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return feeds;
   }
 
 }

@@ -6,16 +6,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sistemasoperativos.denny.rssreader.R;
+import com.sistemasoperativos.denny.rssreader.database.DBHelper;
+import com.sistemasoperativos.denny.rssreader.database.db.FeedDB;
+import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
+import com.sistemasoperativos.denny.rssreader.dialogfragments.EntryDialogFragment;
+import com.sistemasoperativos.denny.rssreader.models.Feed;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 /**
  * Created by denny on 27/06/15.
  */
 public class ScheduledActivity extends AppCompatActivity {
 
+  private FeedDB feedDB;
   private ViewHolder viewHolder;
+  private ArrayList<Feed> entries;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +39,21 @@ public class ScheduledActivity extends AppCompatActivity {
     viewHolder.findActivityViews();
     setCustomActionBar();
     setCustomStatusBar();
+
+    DBHelper helper = OpenHelperManager.getHelper(ScheduledActivity.this, DBHelper.class);
+    feedDB = new FeedDB(helper);
+    entries = feedDB.getScheduledFeeds();
+
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        for (Feed feed : entries) {
+          viewHolder.createCard(feed);
+        }
+      }
+    });
+
+
   }
 
   @Override
@@ -63,9 +92,39 @@ public class ScheduledActivity extends AppCompatActivity {
   private class ViewHolder {
 
     private Toolbar toolbar;
+    private LinearLayout entries;
 
     public void findActivityViews() {
-      toolbar = (Toolbar) findViewById(R.id.toolbar);
+      toolbar = (Toolbar) findViewById(R.id.scheduled_toolbar);
+      entries = (LinearLayout) findViewById(R.id.scheduled_entries);
+    }
+
+    public void createCard(final Feed entry) {
+      View card = getLayoutInflater().inflate(R.layout.entry, entries, false);
+
+      TextView title = (TextView) card.findViewById(R.id.entry_title);
+      TextView source = (TextView) card.findViewById(R.id.entry_source);
+      TextView time = (TextView) card.findViewById(R.id.entry_time);
+      ImageView media = (ImageView) card.findViewById(R.id.entry_media);
+
+      title.setText(entry.getTitle());
+      source.setText(entry.getSource());
+      time.setText(entry.getPubDate());
+      if (!entry.getImgurl().isEmpty()) {
+        Picasso.with(ScheduledActivity.this).load(entry.getImgurl()).into(media);
+      } else {
+        media.setVisibility(View.GONE);
+      }
+
+      card.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          EntryDialogFragment edf = EntryDialogFragment.newInstance(entry);
+          edf.show(getSupportFragmentManager(), "");
+        }
+      });
+
+      entries.addView(card);
     }
 
   }

@@ -23,7 +23,7 @@ public class Feed implements Serializable {
   @DatabaseField(generatedId = true, columnName = ID)
   private int id;
   @DatabaseField(columnName = SCHEDULED)
-  private int scheduled;
+  private boolean scheduled;
   @DatabaseField(columnName = TITLE)
   private String title;
   @DatabaseField(columnName = URL)
@@ -36,12 +36,12 @@ public class Feed implements Serializable {
   private String videourl;
   @DatabaseField(columnName = PUBDATE)
   private String pubDate;
-  @DatabaseField(columnName = PUBDATE)
+  @DatabaseField(columnName = SOURCE)
   private String source;
 
   public Feed() {
     this.id = 0;
-    this.scheduled = 0;
+    this.scheduled =false;
     this.title = "";
     this.url = "";
     this.description = "";
@@ -52,7 +52,7 @@ public class Feed implements Serializable {
   }
 
   public Feed(
-      int scheduled,
+      boolean scheduled,
       String title,
       String url,
       String description,
@@ -72,7 +72,7 @@ public class Feed implements Serializable {
 
   public Feed(
       int id,
-      int scheduled,
+      boolean scheduled,
       String title,
       String url,
       String description,
@@ -98,10 +98,10 @@ public class Feed implements Serializable {
     this.id = id;
   }
 
-  public int getScheduled() {
+  public boolean isScheduled() {
     return scheduled;
   }
-  public void setScheduled(int scheduled) {
+  public void setScheduled(boolean scheduled) {
     this.scheduled = scheduled;
   }
 
@@ -163,6 +163,7 @@ public class Feed implements Serializable {
         "ImgUrl: " + imgurl + "\n" +
         "PubDate: " + pubDate + "\n" +
         "Source: " + source + "\n" +
+        "Scheduled: " + scheduled + "\n" +
         "}";
   }
 }

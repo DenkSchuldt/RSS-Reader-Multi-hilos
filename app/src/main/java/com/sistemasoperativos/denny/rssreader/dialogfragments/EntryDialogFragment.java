@@ -20,8 +20,12 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.pkmmte.view.CircularImageView;
 import com.sistemasoperativos.denny.rssreader.R;
+import com.sistemasoperativos.denny.rssreader.database.DBHelper;
+import com.sistemasoperativos.denny.rssreader.database.db.FeedDB;
+import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
 import com.sistemasoperativos.denny.rssreader.interfaces.OnSettingsEvent;
 import com.sistemasoperativos.denny.rssreader.models.Feed;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
@@ -39,6 +43,7 @@ public class EntryDialogFragment extends DialogFragment {
   private Feed entry;
   private Point displaySize;
   private ViewHolder viewHolder;
+  private FeedDB feedDB;
 
   public static EntryDialogFragment newInstance(Feed entry) {
     EntryDialogFragment fdf = new EntryDialogFragment();
@@ -53,6 +58,8 @@ public class EntryDialogFragment extends DialogFragment {
     getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
     entry = getEntryFromArguments();
     displaySize = Utils.getDisplaySize(getActivity());
+    DBHelper helper = OpenHelperManager.getHelper(getActivity(), DBHelper.class);
+    feedDB = new FeedDB(helper);
     if (entry.getImgurl().isEmpty()) {
       viewHolder = new ViewHolder(inflater.inflate(R.layout.fragment_entry_no_image, container, false));
     } else {
@@ -117,6 +124,10 @@ public class EntryDialogFragment extends DialogFragment {
     viewHolder.title.setText(entry.getTitle());
     viewHolder.description.setText(entry.getDescription());
     viewHolder.time.setText(entry.getPubDate());
+    if (entry.isScheduled()) {
+      viewHolder.schedule.setBackgroundColor(getResources().getColor(R.color.primary_dark_material_dark));
+      viewHolder.schedule.setImageResource(R.drawable.ic_schedule_white_48dp);
+    }
   }
 
   /**
@@ -129,6 +140,7 @@ public class EntryDialogFragment extends DialogFragment {
     public TextView title;
     public ImageView img;
     public CircularImageView sourceLogo;
+    public CircularImageView schedule;
     public TextView sourceName;
     public TextView description;
     public TextView time;
@@ -144,12 +156,14 @@ public class EntryDialogFragment extends DialogFragment {
         img = (ImageView) root.findViewById(R.id.entry_detailed_img);
       title = (TextView) root.findViewById(R.id.entry_detailed_title);
       sourceLogo = (CircularImageView) root.findViewById(R.id.entry_detailed_source_logo);
+      schedule = (CircularImageView) root.findViewById(R.id.entry_detailed_schedule);
       sourceName = (TextView) root.findViewById(R.id.entry_detailed_source_name);
       description = (TextView) root.findViewById(R.id.entry_detailed_description);
       time = (TextView) root.findViewById(R.id.entry_detailed_time);
       close = (Button) root.findViewById(R.id.entry_detailed_close);
       more = (Button) root.findViewById(R.id.entry_detailed_more);
 
+      schedule.setOnClickListener(this);
       close.setOnClickListener(this);
       more.setOnClickListener(this);
     }
@@ -165,6 +179,17 @@ public class EntryDialogFragment extends DialogFragment {
           web.putExtra(Constants.ENTRY, entry);
           startActivity(web);
           dismiss();
+          break;
+        case R.id.entry_detailed_schedule:
+          entry.setScheduled(!entry.isScheduled());
+          feedDB.saveFeed(entry);
+          if (entry.isScheduled()) {
+            viewHolder.schedule.setBackgroundColor(getResources().getColor(R.color.primary_dark_material_dark));
+            viewHolder.schedule.setImageResource(R.drawable.ic_schedule_white_48dp);
+          } else {
+            viewHolder.schedule.setBackgroundColor(getResources().getColor(R.color.white));
+            viewHolder.schedule.setImageResource(R.drawable.ic_schedule_black_48dp);
+          }
           break;
       }
     }
