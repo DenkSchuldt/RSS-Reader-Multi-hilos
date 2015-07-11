@@ -14,10 +14,9 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.database.DBHelper;
-import com.sistemasoperativos.denny.rssreader.database.db.FeedDB;
-import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
+import com.sistemasoperativos.denny.rssreader.database.db.EntryDB;
 import com.sistemasoperativos.denny.rssreader.dialogfragments.EntryDialogFragment;
-import com.sistemasoperativos.denny.rssreader.models.Feed;
+import com.sistemasoperativos.denny.rssreader.models.Entry;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,9 +26,9 @@ import java.util.ArrayList;
  */
 public class ScheduledActivity extends AppCompatActivity {
 
-  private FeedDB feedDB;
+  private EntryDB entryDB;
   private ViewHolder viewHolder;
-  private ArrayList<Feed> entries;
+  private ArrayList<Entry> entries;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +40,14 @@ public class ScheduledActivity extends AppCompatActivity {
     setCustomStatusBar();
 
     DBHelper helper = OpenHelperManager.getHelper(ScheduledActivity.this, DBHelper.class);
-    feedDB = new FeedDB(helper);
-    entries = feedDB.getScheduledFeeds();
+    entryDB = new EntryDB(helper);
+    entries = entryDB.getScheduledEntries();
 
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        for (Feed feed : entries) {
-          viewHolder.createCard(feed);
+        for (Entry entry : entries) {
+          viewHolder.createCard(entry);
         }
       }
     });
@@ -99,7 +98,7 @@ public class ScheduledActivity extends AppCompatActivity {
       entries = (LinearLayout) findViewById(R.id.scheduled_entries);
     }
 
-    public void createCard(final Feed entry) {
+    public void createCard(final Entry entry) {
       View card = getLayoutInflater().inflate(R.layout.entry, entries, false);
 
       TextView title = (TextView) card.findViewById(R.id.entry_title);

@@ -1,7 +1,6 @@
 package com.sistemasoperativos.denny.rssreader.views;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sistemasoperativos.denny.rssreader.R;
-import com.sistemasoperativos.denny.rssreader.models.Feed;
+import com.sistemasoperativos.denny.rssreader.models.Entry;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
 
 /**
@@ -20,7 +19,7 @@ import com.sistemasoperativos.denny.rssreader.utils.Constants;
  */
 public class WebActivity extends AppCompatActivity {
 
-  private Feed entry;
+  private Entry entry;
   private ViewHolder viewHolder;
 
   @Override
@@ -36,8 +35,8 @@ public class WebActivity extends AppCompatActivity {
   /**
    *
    */
-  public Feed getEntryFromIntent() {
-    return (Feed) getIntent().getSerializableExtra(Constants.ENTRY);
+  public Entry getEntryFromIntent() {
+    return (Entry) getIntent().getSerializableExtra(Constants.ENTRY);
   }
 
   /**

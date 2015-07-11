@@ -1,6 +1,6 @@
 package com.sistemasoperativos.denny.rssreader.parsers;
 
-import com.sistemasoperativos.denny.rssreader.models.Feed;
+import com.sistemasoperativos.denny.rssreader.models.Entry;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
 
 import org.w3c.dom.Document;
@@ -25,8 +25,8 @@ public class BBCParser {
   private static final String LINK = "link";
   private static final String PUBLISHED = "published";
 
-  public ArrayList<Feed> parse(InputStream inputStream) {
-    ArrayList<Feed> feeds = new ArrayList<>();
+  public ArrayList<Entry> parse(InputStream inputStream) {
+    ArrayList<Entry> entries = new ArrayList<>();
     try {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder db = dbf.newDocumentBuilder();
@@ -34,20 +34,20 @@ public class BBCParser {
       doc.getDocumentElement().normalize();
       NodeList items = doc.getElementsByTagName(ENTRY);
       for (int i = 0; i < items.getLength(); i++) {
-        Feed feed = new Feed();
+        Entry entry = new Entry();
         NodeList childNodes = items.item(i).getChildNodes();
         for (int j=0; j<childNodes.getLength(); j++) {
           String content = childNodes.item(j).getTextContent();
           switch (childNodes.item(j).getNodeName()) {
             case TITLE:
-              feed.setTitle(content);
+              entry.setTitle(content);
               break;
             case DCIDENTIFIER:
               content = "http://www.bbc.com" + content;
-              feed.setUrl(content);
+              entry.setUrl(content);
               break;
             case SUMMARY:
-              feed.setDescription(content);
+              entry.setDescription(content);
               break;
             case LINK:
               NodeList deph1 = childNodes.item(j).getChildNodes();
@@ -63,7 +63,7 @@ public class BBCParser {
                             switch (deph3.item(c).getNodeName()) {
                               case "img":
                                 String img = deph3.item(c).getAttributes().getNamedItem("src").getNodeValue();
-                                feed.setImgurl(img);
+                                entry.setImgurl(img);
                                 break;
                             }
                           }
@@ -75,17 +75,17 @@ public class BBCParser {
               }
               break;
             case PUBLISHED:
-              feed.setPubDate(content);
+              entry.setPubDate(content);
               break;
           }
         }
-        feed.setSource(Constants.BBC);
-        feeds.add(feed);
+        entry.setSource(Constants.BBC);
+        entries.add(entry);
       }
     } catch (Exception e) {
       System.out.println(e);
     }
-    return feeds;
+    return entries;
   }
 
 }

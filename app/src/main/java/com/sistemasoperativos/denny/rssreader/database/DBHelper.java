@@ -8,7 +8,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.sistemasoperativos.denny.rssreader.models.Feed;
+import com.sistemasoperativos.denny.rssreader.models.Entry;
 import com.sistemasoperativos.denny.rssreader.models.Producer;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
 
@@ -24,7 +24,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   private static final String DATABASE_NAME = "sistemasoperativos_rssreader.db";
   private static final int DATABASE_VERSION = 1;
 
-  private Dao<Feed, Integer> feedDao;
+  private Dao<Entry, Integer> entryDao;
   private Dao<Producer, Integer> producerDao;
 
   public DBHelper(Context context) {
@@ -34,7 +34,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   @Override
   public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
     try {
-      TableUtils.createTable(connectionSource, Feed.class);
+      TableUtils.createTable(connectionSource, Entry.class);
       TableUtils.createTable(connectionSource, Producer.class);
 
       Producer eluniverso = new Producer(
@@ -73,11 +73,11 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     onCreate(db, connectionSource);
   }
 
-  public Dao<Feed, Integer> getFeedDao() throws SQLException {
-    if (feedDao == null) {
-      feedDao = getDao(Feed.class);
+  public Dao<Entry, Integer> getEntryDao() throws SQLException {
+    if (entryDao == null) {
+      entryDao = getDao(Entry.class);
     }
-    return feedDao;
+    return entryDao;
   }
 
   public Dao<Producer, Integer> getProducerDao() throws SQLException {
@@ -90,7 +90,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   @Override
   public void close() {
     super.close();
-    feedDao = null;
+    entryDao = null;
     producerDao = null;
   }
 

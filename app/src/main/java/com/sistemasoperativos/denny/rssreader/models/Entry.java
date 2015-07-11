@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by denny on 6/11/15.
  */
-public class Feed implements Serializable {
+public class Entry implements Serializable {
 
   public static final String ID = "_id";
   public static final String SCHEDULED = "scheduled";
@@ -39,7 +39,7 @@ public class Feed implements Serializable {
   @DatabaseField(columnName = SOURCE)
   private String source;
 
-  public Feed() {
+  public Entry() {
     this.id = 0;
     this.scheduled =false;
     this.title = "";
@@ -51,7 +51,7 @@ public class Feed implements Serializable {
     this.source = "";
   }
 
-  public Feed(
+  public Entry(
       boolean scheduled,
       String title,
       String url,
@@ -70,7 +70,7 @@ public class Feed implements Serializable {
     this.source = source;
   }
 
-  public Feed(
+  public Entry(
       int id,
       boolean scheduled,
       String title,
@@ -156,7 +156,7 @@ public class Feed implements Serializable {
 
   @Override
   public String toString() {
-    return "Feed: {" + "\n" +
+    return "Entry: {" + "\n" +
         "title: " + title + "\n" +
         "URL: " + url + "\n" +
         "description: " + description + "\n" +

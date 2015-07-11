@@ -1,37 +1,28 @@
 package com.sistemasoperativos.denny.rssreader.dialogfragments;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.pkmmte.view.CircularImageView;
 import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.database.DBHelper;
-import com.sistemasoperativos.denny.rssreader.database.db.FeedDB;
-import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
-import com.sistemasoperativos.denny.rssreader.interfaces.OnSettingsEvent;
-import com.sistemasoperativos.denny.rssreader.models.Feed;
+import com.sistemasoperativos.denny.rssreader.database.db.EntryDB;
+import com.sistemasoperativos.denny.rssreader.models.Entry;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
 import com.sistemasoperativos.denny.rssreader.utils.Utils;
-import com.sistemasoperativos.denny.rssreader.views.MainActivity;
-import com.sistemasoperativos.denny.rssreader.views.SettingsActivity;
 import com.sistemasoperativos.denny.rssreader.views.WebActivity;
 import com.squareup.picasso.Picasso;
 
@@ -40,12 +31,12 @@ import com.squareup.picasso.Picasso;
  */
 public class EntryDialogFragment extends DialogFragment {
 
-  private Feed entry;
+  private Entry entry;
   private Point displaySize;
   private ViewHolder viewHolder;
-  private FeedDB feedDB;
+  private EntryDB entryDB;
 
-  public static EntryDialogFragment newInstance(Feed entry) {
+  public static EntryDialogFragment newInstance(Entry entry) {
     EntryDialogFragment fdf = new EntryDialogFragment();
     Bundle args = new Bundle();
     args.putSerializable(Constants.ENTRY, entry);
@@ -59,7 +50,7 @@ public class EntryDialogFragment extends DialogFragment {
     entry = getEntryFromArguments();
     displaySize = Utils.getDisplaySize(getActivity());
     DBHelper helper = OpenHelperManager.getHelper(getActivity(), DBHelper.class);
-    feedDB = new FeedDB(helper);
+    entryDB = new EntryDB(helper);
     if (entry.getImgurl().isEmpty()) {
       viewHolder = new ViewHolder(inflater.inflate(R.layout.fragment_entry_no_image, container, false));
     } else {
@@ -102,8 +93,8 @@ public class EntryDialogFragment extends DialogFragment {
   /**
    *
    */
-  public Feed getEntryFromArguments() {
-    return (Feed) getArguments().getSerializable(Constants.ENTRY);
+  public Entry getEntryFromArguments() {
+    return (Entry) getArguments().getSerializable(Constants.ENTRY);
   }
 
   /**
@@ -182,7 +173,7 @@ public class EntryDialogFragment extends DialogFragment {
           break;
         case R.id.entry_detailed_schedule:
           entry.setScheduled(!entry.isScheduled());
-          feedDB.saveFeed(entry);
+          entryDB.saveFeed(entry);
           if (entry.isScheduled()) {
             viewHolder.schedule.setBackgroundColor(getResources().getColor(R.color.primary_dark_material_dark));
             viewHolder.schedule.setImageResource(R.drawable.ic_schedule_white_48dp);

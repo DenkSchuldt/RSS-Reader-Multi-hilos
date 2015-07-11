@@ -1,7 +1,9 @@
 package com.sistemasoperativos.denny.rssreader.views;
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,9 +27,9 @@ import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.database.DBHelper;
 import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
 import com.sistemasoperativos.denny.rssreader.dialogfragments.EntryDialogFragment;
-import com.sistemasoperativos.denny.rssreader.models.Feed;
+import com.sistemasoperativos.denny.rssreader.models.Entry;
 import com.sistemasoperativos.denny.rssreader.models.Producer;
-import com.sistemasoperativos.denny.rssreader.network.GetFeeds;
+import com.sistemasoperativos.denny.rssreader.network.GetEntries;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
 import com.sistemasoperativos.denny.rssreader.parsers.ElUniversoParser;
 import com.sistemasoperativos.denny.rssreader.parsers.BBCParser;
@@ -47,11 +49,14 @@ public class MainActivity extends AppCompatActivity {
   private ProducerDB producerDB;
 
   private ArrayList<Producer> producers;
-  private ArrayList<Feed> feeds;
+  private ArrayList<Entry> entries;
+
+  public int FETCH_TIME;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    FETCH_TIME = readFromSharedPreferences();
     setContentView(R.layout.activity_main);
 
     DBHelper helper = OpenHelperManager.getHelper(MainActivity.this, DBHelper.class);
@@ -115,20 +120,26 @@ public class MainActivity extends AppCompatActivity {
     return super.onCreateOptionsMenu(menu);
   }
 
+  public int readFromSharedPreferences() {
+    SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+    int time = sharedPref.getInt(getString(R.string.shared_preferences_settings_time), 5);
+    return time;
+  }
+
   public void activateProducer(final Producer producer) {
-    Thread thread = new Thread(new Runnable(){
+    final Thread thread = new Thread(new Runnable(){
       @Override
       public void run() {
         try {
-          GetFeeds get = new GetFeeds();
-          String xml = get.getFeeds(producer.getUrl());
+          GetEntries get = new GetEntries();
+          String xml = get.getEntries(producer.getUrl());
           InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
           switch (producer.getName()) {
             case Constants.ELUNIVERSO:
-              feeds = new ElUniversoParser().parse(is);
+              entries = new ElUniversoParser().parse(is);
               break;
             case Constants.BBC:
-              feeds = new BBCParser().parse(is);
+              entries = new BBCParser().parse(is);
               break;
             case Constants.CNN:
               break;
@@ -141,11 +152,17 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
           @Override
           public void run() {
-            for (Feed feed : feeds) {
-              viewHolder.createCard(feed);
+            for (Entry entry : entries) {
+              viewHolder.createCard(entry);
             }
           }
         });
+        int sleep = FETCH_TIME * 1000 * 60;
+        try {
+          Thread.sleep(sleep);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
       }
     });
     thread.start();
@@ -263,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         objectAnimator.start();
     }
 
-    public void createCard(final Feed entry) {
+    public void createCard(final Entry entry) {
       View card = getLayoutInflater().inflate(R.layout.entry, entries, false);
 
       TextView title = (TextView) card.findViewById(R.id.entry_title);

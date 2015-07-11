@@ -1,6 +1,6 @@
 package com.sistemasoperativos.denny.rssreader.parsers;
 
-import com.sistemasoperativos.denny.rssreader.models.Feed;
+import com.sistemasoperativos.denny.rssreader.models.Entry;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
 
 import org.w3c.dom.Document;
@@ -25,8 +25,8 @@ public class ElUniversoParser {
   private static final String ENCLOSURE = "enclosure";
   private static final String PUBDATE = "pubDate";
 
-  public ArrayList<Feed> parse(InputStream inputStream) {
-    ArrayList<Feed> feeds = new ArrayList<>();
+  public ArrayList<Entry> parse(InputStream inputStream) {
+    ArrayList<Entry> entries = new ArrayList<>();
     try {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder db = dbf.newDocumentBuilder();
@@ -34,35 +34,35 @@ public class ElUniversoParser {
       doc.getDocumentElement().normalize();
       NodeList items = doc.getElementsByTagName(ITEM);
       for (int i = 0; i < items.getLength(); i++) {
-        Feed feed = new Feed();
+        Entry entry = new Entry();
         NodeList childNodes = items.item(i).getChildNodes();
         for (int j=0; j<childNodes.getLength(); j++) {
           String content = childNodes.item(j).getTextContent();
           switch (childNodes.item(j).getNodeName()) {
             case TITLE:
-              feed.setTitle(content);
+              entry.setTitle(content);
               break;
             case LINK:
-              feed.setUrl(content);
+              entry.setUrl(content);
               break;
             case DESCRIPTION:
-              feed.setDescription(content);
+              entry.setDescription(content);
               break;
             case ENCLOSURE:
               String url = childNodes.item(j).getAttributes().getNamedItem("url").getNodeValue();
-              feed.setImgurl(url);
+              entry.setImgurl(url);
               break;
             case PUBDATE:
-              feed.setPubDate(content);
+              entry.setPubDate(content);
               break;
           }
         }
-        feed.setSource(Constants.ELUNIVERSO);
-        feeds.add(feed);
+        entry.setSource(Constants.ELUNIVERSO);
+        entries.add(entry);
       }
     } catch (Exception e) {
       System.out.println(e);
     }
-    return feeds;
+    return entries;
   }
 }
