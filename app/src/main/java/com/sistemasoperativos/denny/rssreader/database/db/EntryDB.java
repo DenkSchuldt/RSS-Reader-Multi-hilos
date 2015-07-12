@@ -16,22 +16,31 @@ import java.util.ArrayList;
 public class EntryDB {
 
   private static final String TAG = "EntryDB";
+
+  private boolean available;
   private Dao<Entry, Integer> entryDao;
 
   public EntryDB(DBHelper dbHelper) {
     try {
       this.entryDao = dbHelper.getEntryDao();
+      this.available = false;
     } catch (SQLException e) {
       Log.d(TAG, "ERROR: Could not get EntryDao.");
       e.printStackTrace();
     }
   }
 
-  public boolean saveEntry(Entry entry) {
+  public synchronized boolean saveEntry(Entry entry) {
     try {
+      while (available == true) {
+        wait();
+      }
       entryDao.createOrUpdate(entry);
+      available = true;
+      notifyAll();
       Log.d(TAG, "SAVED Entry: " + entry);
       return true;
+    } catch (InterruptedException e) {
     } catch (SQLException e) {
       Log.d(TAG, "ERROR: Could not save Entry: " + entry);
       e.printStackTrace();
@@ -51,14 +60,37 @@ public class EntryDB {
     return false;
   }
 
-  public ArrayList<Entry> getEntries() {
+  public synchronized Entry getEntry() {
+    Entry entry = new Entry();
     try {
-      return new ArrayList<>(entryDao.queryForAll());
+      while (available == false) {
+        wait();
+      }
+      entry = entryDao.query(entryDao.queryBuilder().orderBy(Entry.ID, false).limit(1L).prepare()).get(0);
+      available = false;
+      notifyAll();
+    } catch (InterruptedException e) {
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return entry;
+  }
+
+  public synchronized ArrayList<Entry> getEntries() {
+    ArrayList<Entry> entries = new ArrayList<>();
+    try {
+      while (available == false) {
+        wait();
+      }
+      entries.addAll(entryDao.queryForAll());
+      available = false;
+      notifyAll();
+    } catch (InterruptedException e) {
     } catch (SQLException e) {
       Log.d(TAG, "ERROR: Could not get Entries");
       e.printStackTrace();
     }
-    return new ArrayList<Entry>();
+    return entries;
   }
 
   public ArrayList<Entry> getScheduledEntries() {

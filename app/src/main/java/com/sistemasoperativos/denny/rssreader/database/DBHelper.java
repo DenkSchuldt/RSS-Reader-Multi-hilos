@@ -24,7 +24,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   private static final String DATABASE_NAME = "sistemasoperativos_rssreader.db";
   private static final int DATABASE_VERSION = 1;
 
-  private Dao<Entry, Integer> entryDao;
+  private Dao<Entry, Integer> feedDao;
   private Dao<Producer, Integer> producerDao;
 
   public DBHelper(Context context) {
@@ -74,10 +74,10 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   }
 
   public Dao<Entry, Integer> getEntryDao() throws SQLException {
-    if (entryDao == null) {
-      entryDao = getDao(Entry.class);
+    if (feedDao == null) {
+      feedDao = getDao(Entry.class);
     }
-    return entryDao;
+    return feedDao;
   }
 
   public Dao<Producer, Integer> getProducerDao() throws SQLException {
@@ -90,7 +90,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   @Override
   public void close() {
     super.close();
-    entryDao = null;
+    feedDao = null;
     producerDao = null;
   }
 

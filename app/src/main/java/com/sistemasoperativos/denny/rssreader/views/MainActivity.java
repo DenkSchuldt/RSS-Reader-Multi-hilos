@@ -25,6 +25,7 @@ import com.pkmmte.view.CircularImageView;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.database.DBHelper;
+import com.sistemasoperativos.denny.rssreader.database.db.EntryDB;
 import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
 import com.sistemasoperativos.denny.rssreader.dialogfragments.EntryDialogFragment;
 import com.sistemasoperativos.denny.rssreader.models.Entry;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
   private ViewHolder viewHolder;
   private ActionBarDrawerToggle drawerToggle;
   private ProducerDB producerDB;
+  private EntryDB entryDB;
 
   private ArrayList<Producer> producers;
   private ArrayList<Entry> entries;
@@ -60,8 +62,10 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     DBHelper helper = OpenHelperManager.getHelper(MainActivity.this, DBHelper.class);
+    entryDB = new EntryDB(helper);
     producerDB = new ProducerDB(helper);
     producers = producerDB.getProducers();
+    entries = new ArrayList<>();
 
     viewHolder = new ViewHolder();
     viewHolder.findActivityViews();
@@ -71,9 +75,31 @@ public class MainActivity extends AppCompatActivity {
     viewHolder.setCustomStatusBar();
 
     for (Producer producer: producers) {
-      if (producer.isActive())
-        activateProducer(producer);
+      if (producer.isActive()) {
+        producer.setEntryDB(entryDB);
+        producer.setFetchTime(FETCH_TIME);
+        producer.start();
+      }
     }
+
+    Thread consumer = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        while (1==1) {
+          final Entry entry = entryDB.getEntry();
+          if (!entry.isEmpty() && !entries.contains(entry)) {
+            entries.add(entry);
+            runOnUiThread(new Runnable() {
+              @Override
+              public void run() {
+                viewHolder.createCard(entry);
+              }
+            });
+          }
+        }
+      }
+    });
+    consumer.start();
 
   }
 
@@ -126,48 +152,6 @@ public class MainActivity extends AppCompatActivity {
     return time;
   }
 
-  public void activateProducer(final Producer producer) {
-    final Thread thread = new Thread(new Runnable(){
-      @Override
-      public void run() {
-        try {
-          GetEntries get = new GetEntries();
-          String xml = get.getEntries(producer.getUrl());
-          InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
-          switch (producer.getName()) {
-            case Constants.ELUNIVERSO:
-              entries = new ElUniversoParser().parse(is);
-              break;
-            case Constants.BBC:
-              entries = new BBCParser().parse(is);
-              break;
-            case Constants.CNN:
-              break;
-            case Constants.TELEGRAPH:
-              break;
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-        runOnUiThread(new Runnable() {
-          @Override
-          public void run() {
-            for (Entry entry : entries) {
-              viewHolder.createCard(entry);
-            }
-          }
-        });
-        int sleep = FETCH_TIME * 1000 * 60;
-        try {
-          Thread.sleep(sleep);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-      }
-    });
-    thread.start();
-  }
-
   /**
    *
    */
@@ -197,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         TextView item_text = (TextView) root.findViewById(R.id.item_text);
         final ImageView item_action = (ImageView) root.findViewById(R.id.item_action);
 
-        switch (producer.getName()) {
+        switch (producer.getProducerName()) {
           case Constants.ELUNIVERSO:
             item_avatar.setImageResource(R.drawable.eluniverso_logo);
             break;
@@ -212,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
             break;
         }
 
-        item_text.setText(producer.getName());
+        item_text.setText(producer.getProducerName());
         if (producer.isActive())
           item_action.setImageResource(R.drawable.ic_remove_black_24dp);
         else
@@ -226,7 +210,10 @@ public class MainActivity extends AppCompatActivity {
             producer.setActive(!producer.isActive());
             if (producer.isActive()) {
               item_action.setImageResource(R.drawable.ic_remove_black_24dp);
-              activateProducer(producer);
+              producer.setEntryDB(entryDB);
+              producer.setFetchTime(FETCH_TIME);
+              producer.start();
+              //createProducerThread(producer);
             } else {
               item_action.setImageResource(R.drawable.ic_add_black_24dp);
             }
@@ -234,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
           }
         });
 
-        switch (producer.getType()) {
+        switch (producer.getProducerType()) {
           case Constants.NEWS:
             drawerListNews.addView(root);
             break;
@@ -305,7 +292,8 @@ public class MainActivity extends AppCompatActivity {
         }
       });
 
-      entries.addView(card);
+      entries.addView(card, 0);
+      System.out.println("CARD CREATED FOR: " + entry.getTitle());
     }
 
   }

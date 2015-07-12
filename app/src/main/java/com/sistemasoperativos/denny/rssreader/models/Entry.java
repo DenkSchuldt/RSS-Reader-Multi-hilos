@@ -154,6 +154,12 @@ public class Entry implements Serializable {
     this.source = source;
   }
 
+  public boolean isEmpty () {
+    return title.isEmpty() &&
+        url.isEmpty() &&
+        description.isEmpty();
+  }
+
   @Override
   public String toString() {
     return "Entry: {" + "\n" +

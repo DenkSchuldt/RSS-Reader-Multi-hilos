@@ -173,7 +173,7 @@ public class EntryDialogFragment extends DialogFragment {
           break;
         case R.id.entry_detailed_schedule:
           entry.setScheduled(!entry.isScheduled());
-          entryDB.saveFeed(entry);
+          entryDB.saveEntry(entry);
           if (entry.isScheduled()) {
             viewHolder.schedule.setBackgroundColor(getResources().getColor(R.color.primary_dark_material_dark));
             viewHolder.schedule.setImageResource(R.drawable.ic_schedule_white_48dp);
