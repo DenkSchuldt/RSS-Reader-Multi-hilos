@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -78,8 +79,8 @@ public class SettingsActivity extends AppCompatActivity implements OnSettingsEve
   }
 
   public int readFromSharedPreferences() {
-    SharedPreferences sharedPref = SettingsActivity.this.getPreferences(Context.MODE_PRIVATE);
-    int time = sharedPref.getInt(getString(R.string.shared_preferences_settings_time), 5);
+    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+    int time = sharedPref.getInt(getString(R.string.shared_preferences_settings_time), 1);
     return time;
   }
 

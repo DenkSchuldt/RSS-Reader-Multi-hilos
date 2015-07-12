@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -94,7 +95,7 @@ public class FetchDialogFragment extends DialogFragment {
     }
 
     public void saveToSharedPreferences(int value) {
-      SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+      SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
       SharedPreferences.Editor editor = sharedPref.edit();
       editor.putInt(getString(R.string.shared_preferences_settings_time), value);
       editor.commit();

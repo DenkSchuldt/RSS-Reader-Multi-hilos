@@ -38,7 +38,7 @@ public class EntryDB {
       entryDao.createOrUpdate(entry);
       available = true;
       notifyAll();
-      Log.d(TAG, "SAVED Entry: " + entry);
+      //Log.d(TAG, "SAVED Entry: " + entry);
       return true;
     } catch (InterruptedException e) {
     } catch (SQLException e) {

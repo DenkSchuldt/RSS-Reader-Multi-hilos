@@ -1,12 +1,12 @@
 package com.sistemasoperativos.denny.rssreader.views;
 
 import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,14 +30,9 @@ import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
 import com.sistemasoperativos.denny.rssreader.dialogfragments.EntryDialogFragment;
 import com.sistemasoperativos.denny.rssreader.models.Entry;
 import com.sistemasoperativos.denny.rssreader.models.Producer;
-import com.sistemasoperativos.denny.rssreader.network.GetEntries;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
-import com.sistemasoperativos.denny.rssreader.parsers.ElUniversoParser;
-import com.sistemasoperativos.denny.rssreader.parsers.BBCParser;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 
@@ -50,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
   private ProducerDB producerDB;
   private EntryDB entryDB;
 
+  private boolean running;
+  private Thread consumer;
   private ArrayList<Producer> producers;
   private ArrayList<Entry> entries;
 
@@ -66,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     producerDB = new ProducerDB(helper);
     producers = producerDB.getProducers();
     entries = new ArrayList<>();
+    running = true;
 
     viewHolder = new ViewHolder();
     viewHolder.findActivityViews();
@@ -74,32 +72,8 @@ public class MainActivity extends AppCompatActivity {
     viewHolder.setCustomActionBar();
     viewHolder.setCustomStatusBar();
 
-    for (Producer producer: producers) {
-      if (producer.isActive()) {
-        producer.setEntryDB(entryDB);
-        producer.setFetchTime(FETCH_TIME);
-        producer.start();
-      }
-    }
-
-    Thread consumer = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        while (1==1) {
-          final Entry entry = entryDB.getEntry();
-          if (!entry.isEmpty() && !entries.contains(entry)) {
-            entries.add(entry);
-            runOnUiThread(new Runnable() {
-              @Override
-              public void run() {
-                viewHolder.createCard(entry);
-              }
-            });
-          }
-        }
-      }
-    });
-    consumer.start();
+    startProducers();
+    startConsumer();
 
   }
 
@@ -122,7 +96,16 @@ public class MainActivity extends AppCompatActivity {
     }
     switch (item.getItemId()) {
       case R.id.menu_item_refresh:
-        viewHolder.refreshAnimation();
+        viewHolder.refreshAnimation(true);
+        running = false;
+        for (Producer producer: producers)
+          producer.setRunning(running);
+        producers.clear();
+        consumer = null;
+        producers = producerDB.getProducers();
+        running = true;
+        startProducers();
+        startConsumer();
         break;
       case R.id.menu_item_scheduled:
         Intent scheduled = new Intent(this, ScheduledActivity.class);
@@ -146,9 +129,44 @@ public class MainActivity extends AppCompatActivity {
     return super.onCreateOptionsMenu(menu);
   }
 
+  public void startProducers() {
+    for (Producer producer: producers) {
+      if (producer.isActive()) {
+        producer.setEntryDB(entryDB);
+        producer.setFetchTime(FETCH_TIME);
+        producer.setRunning(running);
+        producer.start();
+      }
+    }
+  }
+
+  public void startConsumer() {
+    consumer = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        System.out.println("STARTED CONSUMER: " + consumer.getId());
+        while (running) {
+          final Entry entry = entryDB.getEntry();
+          if (!entry.isEmpty() && !entries.contains(entry)) {
+            entries.add(entry);
+            runOnUiThread(new Runnable() {
+              @Override
+              public void run() {
+                viewHolder.createCard(entry);
+              }
+            });
+          }
+        }
+        System.out.println("TERMINATED CONSUMER: " + consumer.getId());
+      }
+    });
+    consumer.start();
+  }
+
   public int readFromSharedPreferences() {
-    SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-    int time = sharedPref.getInt(getString(R.string.shared_preferences_settings_time), 5);
+    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+    int time = sharedPref.getInt(getString(R.string.shared_preferences_settings_time), 1);
+    System.out.println("TIME: " + time);
     return time;
   }
 
@@ -212,8 +230,8 @@ public class MainActivity extends AppCompatActivity {
               item_action.setImageResource(R.drawable.ic_remove_black_24dp);
               producer.setEntryDB(entryDB);
               producer.setFetchTime(FETCH_TIME);
+              producer.setRunning(true);
               producer.start();
-              //createProducerThread(producer);
             } else {
               item_action.setImageResource(R.drawable.ic_add_black_24dp);
             }
@@ -259,15 +277,21 @@ public class MainActivity extends AppCompatActivity {
       tintManager.setTintColor(Color.TRANSPARENT);
     }
 
-    public void refreshAnimation() {
+    public void refreshAnimation(boolean animation) {
+      if (animation) {
         int refreshTime = 750;
         objectAnimator = ObjectAnimator.ofFloat(findViewById(R.id.menu_item_refresh), "rotation", 0.0f, 360f);
-      objectAnimator.setDuration(refreshTime);
+        objectAnimator.setDuration(refreshTime);
         objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
         objectAnimator.start();
+      } else {
+        if (objectAnimator != null)
+          objectAnimator.end();
+      }
     }
 
     public void createCard(final Entry entry) {
+      viewHolder.refreshAnimation(false);
       View card = getLayoutInflater().inflate(R.layout.entry, entries, false);
 
       TextView title = (TextView) card.findViewById(R.id.entry_title);
@@ -292,8 +316,8 @@ public class MainActivity extends AppCompatActivity {
         }
       });
 
-      entries.addView(card, 0);
-      System.out.println("CARD CREATED FOR: " + entry.getTitle());
+      entries.addView(card);
+      //System.out.println("CARD CREATED FOR: " + entry.getTitle());
     }
 
   }

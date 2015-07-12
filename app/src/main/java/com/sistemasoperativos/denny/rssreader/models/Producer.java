@@ -37,6 +37,7 @@ public class Producer extends Thread {
 
   private int fetchTime;
   private EntryDB entryDB;
+  private boolean running;
 
   public Producer() {
     this.id = 0;
@@ -92,38 +93,47 @@ public class Producer extends Thread {
   public void setActive(boolean active) {
     this.active = active;
   }
+  public void setRunning(boolean running) {
+    this.running = running;
+  }
 
   @Override
   public void run() {
     super.run();
+    System.out.println("STARTED PRODUCER: " + getId());
     ArrayList<Entry> entries = new ArrayList<>();
     try {
-      GetEntries get = new GetEntries();
-      String xml = get.getEntries(url);
-      InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
-      switch (name) {
-        case Constants.ELUNIVERSO:
-          entries = new ElUniversoParser().parse(is);
-          break;
-        case Constants.BBC:
-          entries = new BBCParser().parse(is);
-          break;
-        case Constants.CNN:
-          break;
-        case Constants.TELEGRAPH:
-          break;
+      while (running) {
+        GetEntries get = new GetEntries();
+        String xml = get.getEntries(url);
+        InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+        switch (name) {
+          case Constants.ELUNIVERSO:
+            entries = new ElUniversoParser().parse(is);
+            break;
+          case Constants.BBC:
+            entries = new BBCParser().parse(is);
+            break;
+          case Constants.CNN:
+            break;
+          case Constants.TELEGRAPH:
+            break;
+        }
+        for (Entry entry : entries) {
+          entryDB.saveEntry(entry);
+        }
+        int sleep = fetchTime * 1000 * 60;
+        Thread.sleep(sleep);
       }
-      for (Entry entry : entries) {
-        entryDB.saveEntry(entry);
-      }
-      int sleep = fetchTime * 1000 * 60;
-      Thread.sleep(sleep);
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (Exception e) {
       e.printStackTrace();
     }
+    System.out.println("TERMINATED PRODUCER: " + getId());
   }
+
+
 
   @Override
   public String toString() {
