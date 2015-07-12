@@ -13,60 +13,59 @@
             android:layout_height="wrap_content"
             android:background="@color/white">
 
-            <TextView
-                android:id="@+id/entry.detailed.title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/list.item.primary.text"
-                android:textColor="@color/black"
-                android:layout_margin="@dimen/margin"
-                android:textStyle="bold"/>
-
             <RelativeLayout
-                android:id="@+id/entry.detailed.source"
+                android:id="@+id/entry.detailed.header"
+                android:layout_toLeftOf="@+id/entry.detailed.schedule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/entry.detailed.title">
-                <com.pkmmte.view.CircularImageView
-                    android:id="@+id/entry.detailed.source.logo"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="@dimen/margin"/>
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginRight="@dimen/margin"
+                android:layout_marginLeft="@dimen/margin">
+                <TextView
+                    android:id="@+id/entry.detailed.title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/list.item.primary.text"
+                    android:text="lalalalal"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
                 <TextView
                     android:id="@+id/entry.detailed.source.name"
+                    android:layout_below="@+id/entry.detailed.title"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_toRightOf="@+id/entry.detailed.source.logo"
-                    android:layout_marginLeft="10dp"
+                    android:layout_height="wrap_content"
+                    android:text="El Universo"
                     android:gravity="center"/>
-                <com.pkmmte.view.CircularImageView
-                    android:id="@+id/entry.detailed.schedule"
-                    android:layout_below="@+id/entry.detailed.img"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@color/white"
-                    android:src="@drawable/ic_schedule_black_48dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/margin"/>
+                <TextView
+                    android:id="@+id/entry.detailed.time"
+                    android:layout_below="@+id/entry.detailed.title"
+                    android:layout_toRightOf="@+id/entry.detailed.source.name"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:layout_marginRight="@dimen/margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="12min"/>
             </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/entry.detailed.schedule"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_schedule_black_48dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/margin"
+                android:layout_marginTop="@dimen/margin"/>
 
             <TextView
                 android:id="@+id/entry.detailed.description"
-                android:layout_below="@+id/entry.detailed.source"
+                android:layout_below="@+id/entry.detailed.header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin"/>
 
-            <TextView
-                android:id="@+id/entry.detailed.time"
-                android:layout_below="@+id/entry.detailed.description"
-                android:layout_marginLeft="@dimen/margin"
-                android:layout_marginRight="@dimen/margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
             <LinearLayout
-                android:layout_below="@+id/entry.detailed.time"
+                android:layout_below="@+id/entry.detailed.description"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dialog.area.buttons.height"
                 android:padding="@dimen/dialog.area.buttons.padding"

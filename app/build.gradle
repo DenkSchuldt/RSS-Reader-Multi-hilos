@@ -27,4 +27,6 @@ dependencies {
     compile 'com.pkmmte.view:circularimageview:1.1'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'me.zhanghai.android.materialprogressbar:library:1.0.2'
+    compile 'com.android.support:palette-v7:21.0.+'
 }
