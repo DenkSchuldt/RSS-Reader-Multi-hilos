@@ -4,21 +4,11 @@
     android:id="@+id/singlelineAvatarTextIcon"
     android:descendantFocusability="blocksDescendants">
 
-    <com.pkmmte.view.CircularImageView
-        android:id="@+id/item_avatar"
-        android:layout_width="@dimen/avatar.width"
-        android:layout_height="@dimen/avatar.height"
-        android:src="@drawable/bbc_logo"
-        android:layout_centerVertical="true"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"/>
     <TextView
         android:id="@+id/item_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center|left"
-        android:layout_toRightOf="@+id/item_avatar"
+        android:gravity="center_vertical"
         android:layout_toLeftOf="@+id/item_action"
         android:text="Item"
         android:textSize="@dimen/list.item.primary.text"

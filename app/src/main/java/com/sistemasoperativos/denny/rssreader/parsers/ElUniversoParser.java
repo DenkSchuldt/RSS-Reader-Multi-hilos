@@ -57,7 +57,7 @@ public class ElUniversoParser {
               break;
           }
         }
-        entry.setSource(Constants.ELUNIVERSO);
+        entry.setSource(Constants.EL_UNIVERSO);
         entries.add(entry);
       }
     } catch (Exception e) {

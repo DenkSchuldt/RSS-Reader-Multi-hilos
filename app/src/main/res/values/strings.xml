@@ -1,5 +1,43 @@
 <resources>
 
+    <string name="feed.noticias">Noticias</string>
+    <string name="feed.opinion">Opinión</string>
+    <string name="feed.deportes">Deportes</string>
+    <string name="feed.vida.y.estilo">Vida y Estilo</string>
+
+    <string name="feed.noticias.migrantes">Migrantes</string>
+    <string name="feed.noticias.entrevistas">Entrevistas</string>
+    <string name="feed.noticias.viva.alborada">Viva Alborada</string>
+    <string name="feed.noticias.viva.norte">Viva Norte</string>
+    <string name="feed.noticias.viva.sambo">Viva Sambo</string>
+    <string name="feed.noticias.politica">Política</string>
+    <string name="feed.noticias.economia">Economía</string>
+    <string name="feed.noticias.ecuador">Ecuador</string>
+    <string name="feed.noticias.internacional">Internacional</string>
+    <string name="feed.noticias.gran.guayaquil">Gran Guayaquil</string>
+    <string name="feed.noticias.informes">Informes</string>
+    <string name="feed.noticias.seguridad">Seguridad</string>
+    <string name="feed.noticias.viva">Viva</string>
+    <string name="feed.opinion.columnistas">Columnistas</string>
+    <string name="feed.opinion.editoriales">Editoriales</string>
+    <string name="feed.opinion.cartas.al.director">Cartas al Director</string>
+    <string name="feed.opinion.caricaturas">Caricaturas</string>
+    <string name="feed.opinion.foro.de.lectores">Foro de Lectores</string>
+    <string name="feed.deportes.futbol">Fútbol</string>
+    <string name="feed.deportes.campeonato">Campeonato</string>
+    <string name="feed.deportes.tenis">Tenis</string>
+    <string name="feed.deportes.otros.deportes">Otros Deportes</string>
+    <string name="feed.deportes.columnistas.deportes">Colunistas Deportes</string>
+    <string name="feed.vida.y.estilo.intercultural">Intercultural</string>
+    <string name="feed.vida.y.estilo.tendencias">Tendencias</string>
+    <string name="feed.vida.y.estilo.tecnologia">Tecnología</string>
+    <string name="feed.vida.y.estilo.cultura">Cultura</string>
+    <string name="feed.vida.y.estilo.ecologia">Ecología</string>
+    <string name="feed.vida.y.estilo.cine.y.tv">Cine y TV</string>
+    <string name="feed.vida.y.estilo.musica">Música</string>
+    <string name="feed.vida.y.estilo.salud">Salud</string>
+    <string name="feed.vida.y.estilo.gente">Gente</string>
+
     <string name="app_name">RSS Reader Multi-hilos</string>
     <string name="shared.preferences.key">com.sistemasoperativos.denny.rssreader</string>
     <string name="shared.preferences.settings.time">settings</string>
@@ -11,11 +49,6 @@
     <string name="menu.action.refresh">Actualizar</string>
     <string name="menu.action.scheduled">Noticias guardadas</string>
     <string name="menu.action.settings">Configuraciones</string>
-
-    <string name="drawer.item.news">Noticias</string>
-    <string name="drawer.item.tech">Tecnología</string>
-    <string name="drawer.item.art">Arte</string>
-    <string name="drawer.item.music">Música</string>
 
     <string name="settings.section.general">General</string>
     <string name="settings.time.title">Tiempo para obtener nuevas noticias</string>

@@ -1,13 +1,9 @@
 package com.sistemasoperativos.denny.rssreader.models;
 
-import android.os.DropBoxManager;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.sistemasoperativos.denny.rssreader.database.db.EntryDB;
 import com.sistemasoperativos.denny.rssreader.network.GetEntries;
-import com.sistemasoperativos.denny.rssreader.parsers.BBCParser;
 import com.sistemasoperativos.denny.rssreader.parsers.ElUniversoParser;
-import com.sistemasoperativos.denny.rssreader.utils.Constants;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -107,18 +103,7 @@ public class Producer extends Thread {
         GetEntries get = new GetEntries();
         String xml = get.getEntries(url);
         InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
-        switch (name) {
-          case Constants.ELUNIVERSO:
-            entries = new ElUniversoParser().parse(is);
-            break;
-          case Constants.BBC:
-            entries = new BBCParser().parse(is);
-            break;
-          case Constants.CNN:
-            break;
-          case Constants.TELEGRAPH:
-            break;
-        }
+        entries = new ElUniversoParser().parse(is);
         for (Entry entry : entries) {
           entryDB.saveEntry(entry);
         }

@@ -15,40 +15,40 @@
 
         <TextView
             style="@style/Subheader"
-            android:text="@string/drawer.item.news"/>
+            android:text="@string/feed.noticias"/>
         <View style="@style/Separator"/>
         <LinearLayout
-            android:id="@+id/drawer.list.news"
+            android:id="@+id/drawer.list.noticias"
             style="@style/VerticalList"/>
 
         <View style="@style/Separator"/>
 
         <TextView
             style="@style/Subheader"
-            android:text="@string/drawer.item.tech"/>
+            android:text="@string/feed.opinion"/>
         <View style="@style/Separator"/>
         <LinearLayout
-            android:id="@+id/drawer.list.tech"
+            android:id="@+id/drawer.list.opinion"
             style="@style/VerticalList"/>
 
         <View style="@style/Separator"/>
 
         <TextView
             style="@style/Subheader"
-            android:text="@string/drawer.item.art"/>
+            android:text="@string/feed.deportes"/>
         <View style="@style/Separator"/>
         <LinearLayout
-            android:id="@+id/drawer.list.art"
+            android:id="@+id/drawer.list.deportes"
             style="@style/VerticalList"/>
 
         <View style="@style/Separator"/>
 
         <TextView
             style="@style/Subheader"
-            android:text="@string/drawer.item.music"/>
+            android:text="@string/feed.vida.y.estilo"/>
         <View style="@style/Separator"/>
         <LinearLayout
-            android:id="@+id/drawer.list.music"
+            android:id="@+id/drawer.list.vida.y.estilo"
             style="@style/VerticalList"/>
 
     </LinearLayout>

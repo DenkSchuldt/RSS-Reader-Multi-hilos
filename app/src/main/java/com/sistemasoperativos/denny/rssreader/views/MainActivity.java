@@ -178,41 +178,31 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private LinearLayout entries;
-    private LinearLayout drawerListNews;
+    private LinearLayout drawerListNoticias;
+    private LinearLayout drawerListOpinion;
+    private LinearLayout drawerListDeportes;
+    private LinearLayout drawerListVidayEstilo;
     private ObjectAnimator objectAnimator;
 
     public void findActivityViews() {
       drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
       toolbar = (Toolbar) findViewById(R.id.main_toolbar);
       entries = (LinearLayout) findViewById(R.id.main_entries);
-      drawerListNews = (LinearLayout) findViewById(R.id.drawer_list_news);
+      drawerListNoticias = (LinearLayout) findViewById(R.id.drawer_list_noticias);
+      drawerListOpinion = (LinearLayout) findViewById(R.id.drawer_list_opinion);
+      drawerListDeportes = (LinearLayout) findViewById(R.id.drawer_list_deportes);
+      drawerListVidayEstilo = (LinearLayout) findViewById(R.id.drawer_list_vida_y_estilo);
     }
 
     public void populateLists() {
       for (Producer producer : producers) {
         View root = getLayoutInflater().inflate(
             R.layout.list_singleline_avatar_text_icon,
-            drawerListNews,
+            drawerListNoticias,
             false);
         root.setId(0);
-        CircularImageView item_avatar = (CircularImageView) root.findViewById(R.id.item_avatar);
         TextView item_text = (TextView) root.findViewById(R.id.item_text);
         final ImageView item_action = (ImageView) root.findViewById(R.id.item_action);
-
-        switch (producer.getProducerName()) {
-          case Constants.ELUNIVERSO:
-            item_avatar.setImageResource(R.drawable.eluniverso_logo);
-            break;
-          case Constants.BBC:
-            item_avatar.setImageResource(R.drawable.bbc_logo);
-            break;
-          case Constants.CNN:
-            item_avatar.setImageResource(R.drawable.cnn_logo);
-            break;
-          case Constants.TELEGRAPH:
-            item_avatar.setImageResource(R.drawable.telegraph_logo);
-            break;
-        }
 
         item_text.setText(producer.getProducerName());
         if (producer.isActive())
@@ -240,8 +230,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
         switch (producer.getProducerType()) {
-          case Constants.NEWS:
-            drawerListNews.addView(root);
+          case Constants.NOTICIAS:
+            drawerListNoticias.addView(root);
+            break;
+          case Constants.OPINION:
+            drawerListOpinion.addView(root);
+            break;
+          case Constants.DEPORTES:
+            drawerListDeportes.addView(root);
+            break;
+          case Constants.VIDA_Y_ESTILO:
+            drawerListVidayEstilo.addView(root);
             break;
         }
 
