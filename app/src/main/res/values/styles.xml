@@ -5,6 +5,11 @@
 
     </style>
 
+    <style name="dialog_fade" >
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
     <style name="Separator">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/separator.height</item>

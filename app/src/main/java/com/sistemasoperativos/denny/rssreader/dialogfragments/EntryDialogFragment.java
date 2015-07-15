@@ -36,6 +36,8 @@ import com.sistemasoperativos.denny.rssreader.utils.Utils;
 import com.sistemasoperativos.denny.rssreader.views.WebActivity;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
+
 /**
  * Created by denny on 27/06/15.
  */
@@ -75,13 +77,10 @@ public class EntryDialogFragment extends DialogFragment {
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    setCustomDialogSize();
-  }
-
-  @Override
-  public void onConfigurationChanged(Configuration newConfig) {
-    super.onConfigurationChanged(newConfig);
-    setCustomDialogSize();
+    ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+    params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+    params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+    getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
   }
 
   @Override
@@ -94,20 +93,12 @@ public class EntryDialogFragment extends DialogFragment {
     };
   }
 
-  /**
-   *
-   */
-  public void setCustomDialogSize() {
-    ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-    if (Utils.orientationIsPortrait(getActivity())) {
-      params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-      params.height = (int) getResources().getDimension(R.dimen.dialog_height);
-    } else if (Utils.orientationIsLandscape(getActivity())){
-      params.width = (int) getResources().getDimension(R.dimen.dialog_width);
-      params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-    }
-    getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-    getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+  @Override
+  public void onStart() {
+    super.onStart();
+    if (getDialog() == null)
+      return;
+    getDialog().getWindow().setWindowAnimations(R.style.dialog_fade);
   }
 
   public static Bitmap drawableToBitmap (Drawable drawable) {
@@ -151,7 +142,19 @@ public class EntryDialogFragment extends DialogFragment {
     viewHolder.sourceName.setText(entry.getSource());
     viewHolder.title.setText(entry.getTitle());
     viewHolder.description.setText(entry.getDescription());
-    viewHolder.time.setText(entry.getPubDate());
+
+    String pubDate = entry.getPubDate();
+    String[] date = pubDate.split("\\s+");
+    Calendar calendar = Calendar.getInstance();
+    int day = calendar.get(Calendar.DAY_OF_MONTH);
+    int pubDay = Integer.parseInt(date[1]);
+    if (pubDay == day)
+      viewHolder.time.setText("Hoy, " + date[4].substring(0,5));
+    else if (pubDay == day-1)
+      viewHolder.time.setText("Ayer, " + date[4].substring(0,5));
+    else
+      viewHolder.time.setText(date[2] + " " + date[1] + ", " + date[4].substring(0,5));
+
     if (entry.isScheduled()) {
       viewHolder.schedule.setBackgroundColor(getResources().getColor(R.color.primary_dark_material_dark));
       viewHolder.schedule.setImageResource(R.drawable.ic_schedule_white_48dp);

@@ -20,6 +20,7 @@ import com.sistemasoperativos.denny.rssreader.models.Entry;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by denny on 27/06/15.
@@ -108,7 +109,21 @@ public class ScheduledActivity extends AppCompatActivity {
 
       title.setText(entry.getTitle());
       source.setText(entry.getSource());
-      time.setText(entry.getPubDate());
+
+      String pubDate = entry.getPubDate();
+      String[] date = pubDate.split("\\s+");
+
+      Calendar calendar = Calendar.getInstance();
+      int day = calendar.get(Calendar.DAY_OF_MONTH);
+      int pubDay = Integer.parseInt(date[1]);
+
+      if (pubDay == day)
+        time.setText("Hoy, " + date[4].substring(0,5));
+      else if (pubDay == day-1)
+        time.setText("Ayer, " + date[4].substring(0,5));
+      else
+        time.setText(date[2] + " " + date[1] + ", " + date[4].substring(0,5));
+
       if (!entry.getImgurl().isEmpty()) {
         Picasso.with(ScheduledActivity.this).load(entry.getImgurl()).into(media);
       } else {

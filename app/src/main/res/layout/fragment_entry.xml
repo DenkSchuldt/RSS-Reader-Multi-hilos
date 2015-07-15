@@ -75,7 +75,9 @@
                 android:layout_below="@+id/entry.detailed.header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin"/>
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginRight="@dimen/margin"/>
 
             <LinearLayout
                 android:layout_below="@+id/entry.detailed.description"

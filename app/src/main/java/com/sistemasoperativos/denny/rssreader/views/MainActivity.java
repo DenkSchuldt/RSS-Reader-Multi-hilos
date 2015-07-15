@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.pkmmte.view.CircularImageView;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.database.DBHelper;
@@ -33,7 +32,11 @@ import com.sistemasoperativos.denny.rssreader.models.Producer;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -300,7 +303,21 @@ public class MainActivity extends AppCompatActivity {
 
       title.setText(entry.getTitle());
       source.setText(entry.getSource());
-      time.setText(entry.getPubDate());
+
+      String pubDate = entry.getPubDate();
+      String[] date = pubDate.split("\\s+");
+
+      Calendar calendar = Calendar.getInstance();
+      int day = calendar.get(Calendar.DAY_OF_MONTH);
+      int pubDay = Integer.parseInt(date[1]);
+
+      if (pubDay == day)
+        time.setText("Hoy, " + date[4].substring(0,5));
+      else if (pubDay == day-1)
+        time.setText("Ayer, " + date[4].substring(0,5));
+      else
+        time.setText(date[2] + " " + date[1] + ", " + date[4].substring(0,5));
+
       if (!entry.getImgurl().isEmpty()) {
         Picasso.with(MainActivity.this).load(entry.getImgurl()).into(media);
       } else {
