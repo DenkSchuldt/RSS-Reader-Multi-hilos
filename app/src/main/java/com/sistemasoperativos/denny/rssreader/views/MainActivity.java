@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.EmptyStackException;
+import java.util.Iterator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -74,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     viewHolder.setCustomDrawerToggle();
     viewHolder.setCustomActionBar();
     viewHolder.setCustomStatusBar();
+
+    checkEmptyList();
 
     startProducers();
     startConsumer();
@@ -143,27 +148,67 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  public void deleteViewsByCategory(String category) {
+    ArrayList<View> views = new ArrayList<>();
+    ArrayList<Entry> entries = new ArrayList<>();
+    for (int i=0; i<viewHolder.entries.getChildCount(); i++) {
+      Entry entry = (Entry) viewHolder.entries.getChildAt(i).getTag();
+      System.out.println("Entry: " + entry);
+      if (category.equals(entry.getCategory())) {
+        views.add(viewHolder.entries.getChildAt(i));
+        entries.add(entry);
+      }
+    }
+    for (View v : views) {
+      viewHolder.entries.removeView(v);
+    }
+    entryDB.deleteEntries(entries);
+  }
+
+  public void checkEmptyList() {
+    boolean empty = true;
+    for (Producer producer : producers){
+      if (producer.isActive()) {
+        empty = false;
+      }
+    }
+    if (empty)
+      viewHolder.emptyMain.setVisibility(View.VISIBLE);
+    else
+      viewHolder.emptyMain.setVisibility(View.GONE);
+  }
+
   public void startConsumer() {
     consumer = new Thread(new Runnable() {
       @Override
       public void run() {
         System.out.println("STARTED CONSUMER: " + consumer.getId());
         while (running) {
-          final Entry entry = entryDB.getEntry();
-          if (!entry.isEmpty() && !entries.contains(entry)) {
-            entries.add(entry);
-            runOnUiThread(new Runnable() {
-              @Override
-              public void run() {
-                viewHolder.createCard(entry);
-              }
-            });
+          final ArrayList<Entry> received = entryDB.getEntries();
+          for (final Entry entry : received) {
+            if (!entry.isEmpty() && !entryExits(entry)) {
+              entries.add(entry);
+              runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                  viewHolder.createCard(entry);
+                }
+              });
+            }
           }
         }
-        System.out.println("TERMINATED CONSUMER: " + consumer.getId());
+        System.out.println("TERMINATED CONSUMER");
       }
     });
     consumer.start();
+  }
+
+  public boolean entryExits(Entry entry) {
+    for (Entry e : entries) {
+      if (e.getTitle().equals(entry.getTitle()))
+        return true;
+    }
+    return false;
   }
 
   public int readFromSharedPreferences() {
@@ -181,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private LinearLayout entries;
+    private LinearLayout emptyMain;
     private LinearLayout drawerListNoticias;
     private LinearLayout drawerListOpinion;
     private LinearLayout drawerListDeportes;
@@ -191,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
       drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
       toolbar = (Toolbar) findViewById(R.id.main_toolbar);
       entries = (LinearLayout) findViewById(R.id.main_entries);
+      emptyMain = (LinearLayout) findViewById(R.id.empty_main);
       drawerListNoticias = (LinearLayout) findViewById(R.id.drawer_list_noticias);
       drawerListOpinion = (LinearLayout) findViewById(R.id.drawer_list_opinion);
       drawerListDeportes = (LinearLayout) findViewById(R.id.drawer_list_deportes);
@@ -227,7 +274,9 @@ public class MainActivity extends AppCompatActivity {
               producer.start();
             } else {
               item_action.setImageResource(R.drawable.ic_add_black_24dp);
+              deleteViewsByCategory(producer.getProducerName());
             }
+            checkEmptyList();
             producerDB.saveProducer(producer);
           }
         });
@@ -292,17 +341,18 @@ public class MainActivity extends AppCompatActivity {
       }
     }
 
-    public void createCard(final Entry entry) {
+    public void createCard(Entry entry) {
       viewHolder.refreshAnimation(false);
       View card = getLayoutInflater().inflate(R.layout.entry, entries, false);
+      card.setTag(entry);
 
       TextView title = (TextView) card.findViewById(R.id.entry_title);
-      TextView source = (TextView) card.findViewById(R.id.entry_source);
+      TextView category = (TextView) card.findViewById(R.id.entry_category);
       TextView time = (TextView) card.findViewById(R.id.entry_time);
       ImageView media = (ImageView) card.findViewById(R.id.entry_media);
 
       title.setText(entry.getTitle());
-      source.setText(entry.getSource());
+      category.setText(entry.getCategory());
 
       String pubDate = entry.getPubDate();
       String[] date = pubDate.split("\\s+");
@@ -327,13 +377,14 @@ public class MainActivity extends AppCompatActivity {
       card.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+          Entry entry = (Entry) v.getTag();
           EntryDialogFragment edf = EntryDialogFragment.newInstance(entry);
           edf.show(getSupportFragmentManager(), "");
         }
       });
 
       entries.addView(card);
-      //System.out.println("CARD CREATED FOR: " + entry.getTitle());
+      Log.d(TAG, "CARD created with title:  " + entry.getTitle());
     }
 
   }

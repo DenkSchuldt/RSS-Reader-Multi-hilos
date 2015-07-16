@@ -44,6 +44,9 @@ public class ScheduledActivity extends AppCompatActivity {
     entryDB = new EntryDB(helper);
     entries = entryDB.getScheduledEntries();
 
+    if (!entries.isEmpty())
+      viewHolder.emptyScheduled.setVisibility(View.GONE);
+
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
@@ -52,7 +55,6 @@ public class ScheduledActivity extends AppCompatActivity {
         }
       }
     });
-
 
   }
 
@@ -93,22 +95,24 @@ public class ScheduledActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private LinearLayout entries;
+    private LinearLayout emptyScheduled;
 
     public void findActivityViews() {
       toolbar = (Toolbar) findViewById(R.id.scheduled_toolbar);
       entries = (LinearLayout) findViewById(R.id.scheduled_entries);
+      emptyScheduled = (LinearLayout) findViewById(R.id.empty_scheduled);
     }
 
     public void createCard(final Entry entry) {
       View card = getLayoutInflater().inflate(R.layout.entry, entries, false);
 
       TextView title = (TextView) card.findViewById(R.id.entry_title);
-      TextView source = (TextView) card.findViewById(R.id.entry_source);
+      TextView category = (TextView) card.findViewById(R.id.entry_category);
       TextView time = (TextView) card.findViewById(R.id.entry_time);
       ImageView media = (ImageView) card.findViewById(R.id.entry_media);
 
       title.setText(entry.getTitle());
-      source.setText(entry.getSource());
+      category.setText(entry.getCategory());
 
       String pubDate = entry.getPubDate();
       String[] date = pubDate.split("\\s+");

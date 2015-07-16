@@ -19,6 +19,7 @@ public class Entry implements Serializable {
   public static final String VIDEOURL = "videourl";
   public static final String PUBDATE = "pubdate";
   public static final String SOURCE = "source";
+  public static final String CATEGORY = "category";
 
   @DatabaseField(generatedId = true, columnName = ID)
   private int id;
@@ -36,6 +37,8 @@ public class Entry implements Serializable {
   private String videourl;
   @DatabaseField(columnName = PUBDATE)
   private String pubDate;
+  @DatabaseField(columnName = CATEGORY)
+  private String category;
   @DatabaseField(columnName = SOURCE)
   private String source;
 
@@ -48,6 +51,7 @@ public class Entry implements Serializable {
     this.imgurl = "";
     this.videourl = "";
     this.pubDate = "";
+    this.category = "";
     this.source = "";
   }
 
@@ -59,6 +63,7 @@ public class Entry implements Serializable {
       String imgurl,
       String videourl,
       String pubDate,
+      String category,
       String source) {
     this.scheduled = scheduled;
     this.title = title;
@@ -67,6 +72,7 @@ public class Entry implements Serializable {
     this.imgurl = imgurl;
     this.videourl = videourl;
     this.pubDate = pubDate;
+    this.category = category;
     this.source = source;
   }
 
@@ -79,6 +85,7 @@ public class Entry implements Serializable {
       String imgurl,
       String videourl,
       String pubDate,
+      String category,
       String source) {
     this.id = id;
     this.scheduled = scheduled;
@@ -88,6 +95,7 @@ public class Entry implements Serializable {
     this.imgurl = imgurl;
     this.videourl = videourl;
     this.pubDate = pubDate;
+    this.category = category;
     this.source = source;
   }
 
@@ -147,6 +155,13 @@ public class Entry implements Serializable {
     this.pubDate = pubDate;
   }
 
+  public String getCategory() {
+    return category;
+  }
+  public void setCategory(String category) {
+    this.category = category;
+  }
+
   public String getSource() {
     return source;
   }
@@ -163,11 +178,13 @@ public class Entry implements Serializable {
   @Override
   public String toString() {
     return "Entry: {" + "\n" +
+        "id: " + id + "\n" +
         "title: " + title + "\n" +
         "URL: " + url + "\n" +
         "description: " + description + "\n" +
         "ImgUrl: " + imgurl + "\n" +
         "PubDate: " + pubDate + "\n" +
+        "Category: " + category + "\n" +
         "Source: " + source + "\n" +
         "Scheduled: " + scheduled + "\n" +
         "}";

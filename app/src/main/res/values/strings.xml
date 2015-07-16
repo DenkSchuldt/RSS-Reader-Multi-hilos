@@ -58,4 +58,8 @@
     <string name="font.regular">sans-serif</string>
     <string name="font.medium">sans-serif-medium</string>
 
+    <string name="empty.title">No tienes noticias.</string>
+    <string name="empty.message.main">Agrega feeds desde el menú \nen la izquierda.</string>
+    <string name="empty.message.scheduled">Puedes guardar noticias seleccionando \nla opción en la vista expandida de \nla noticia.</string>
+
 </resources>

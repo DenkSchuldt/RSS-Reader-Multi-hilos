@@ -103,7 +103,7 @@ public class Producer extends Thread {
         GetEntries get = new GetEntries();
         String xml = get.getEntries(url);
         InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
-        entries = new ElUniversoParser().parse(is);
+        entries = new ElUniversoParser().parse(is, name);
         for (Entry entry : entries) {
           entryDB.saveEntry(entry);
         }

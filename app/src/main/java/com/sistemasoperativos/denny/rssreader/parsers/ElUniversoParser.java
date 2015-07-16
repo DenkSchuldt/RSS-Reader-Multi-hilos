@@ -25,7 +25,7 @@ public class ElUniversoParser {
   private static final String ENCLOSURE = "enclosure";
   private static final String PUBDATE = "pubDate";
 
-  public ArrayList<Entry> parse(InputStream inputStream) {
+  public ArrayList<Entry> parse(InputStream inputStream, String category) {
     ArrayList<Entry> entries = new ArrayList<>();
     try {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -58,6 +58,7 @@ public class ElUniversoParser {
           }
         }
         entry.setSource(Constants.EL_UNIVERSO);
+        entry.setCategory(category);
         entries.add(entry);
       }
     } catch (Exception e) {
