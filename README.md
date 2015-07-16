@@ -4,13 +4,17 @@ Escuela Superior Politécnica del Litoral.
 
 With RSS-Reader you can check the latest news from Diario El Universo, Ecuador.
 
-![Alt text](images/producers.png "Select as many feeds as you want to subscribe.")
-
-![Alt text](images/latestnews.png "Get the latest news in a list for easy scan.")
-
-![Alt text](images/entry.png "You can read the description of an Entry, and even read more!")
-
-![Alt text](images/scheduledlist.png "Also, save some news if you want to read them later.")
+Select as many feeds as you want to subscribe.
+![Alt text](images/producers.png =250x)
+<br/><br/>
+Get the latest news in a list for easy scan."
+![Alt text](images/latestnews.png =250x)
+<br/><br/>
+You can read the description of an Entry, and even read more!
+![Alt text](images/entry.png =250x)
+<br/><br/>
+Also, save some news if you want to read them later.
+![Alt text](images/scheduledlist.png =250x)
 
 
 ####Requirements####
