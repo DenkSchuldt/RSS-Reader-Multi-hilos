@@ -117,6 +117,7 @@ public class Entry implements Serializable {
     return title;
   }
   public void setTitle(String title) {
+    title = title.replaceAll("'", "\"");
     this.title = title;
   }
 

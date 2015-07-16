@@ -31,8 +31,12 @@ public class EntryDB {
 
   public synchronized boolean saveEntry(Entry entry) {
     try {
-      entryDao.createOrUpdate(entry);
-      Log.d(TAG, "SAVED Entry: " + entry.getTitle());
+      QueryBuilder b = entryDao.queryBuilder();
+      b.where().eq(Entry.TITLE, entry.getTitle().replaceAll("'", "\""));
+      if (entryDao.query(b.prepare()).isEmpty()) {
+        entryDao.createOrUpdate(entry);
+        Log.d(TAG, "SAVED Entry: " + entry.getTitle());
+      }
       return true;
     } catch (SQLException e) {
       Log.d(TAG, "ERROR: Could not save Entry: " + entry.getTitle());
