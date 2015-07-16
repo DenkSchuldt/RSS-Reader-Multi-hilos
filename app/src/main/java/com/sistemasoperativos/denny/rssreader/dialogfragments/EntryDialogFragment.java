@@ -156,8 +156,7 @@ public class EntryDialogFragment extends DialogFragment {
       viewHolder.time.setText(date[2] + " " + date[1] + ", " + date[4].substring(0,5));
 
     if (entry.isScheduled()) {
-      viewHolder.schedule.setBackgroundColor(getResources().getColor(R.color.primary_dark_material_dark));
-      viewHolder.schedule.setImageResource(R.drawable.ic_schedule_white_48dp);
+      viewHolder.schedule.setImageResource(R.drawable.ic_schedule_black_48dp);
     }
   }
 
@@ -218,13 +217,12 @@ public class EntryDialogFragment extends DialogFragment {
           break;
         case R.id.entry_detailed_schedule:
           entry.setScheduled(!entry.isScheduled());
-          entryDB.saveEntry(entry);
           if (entry.isScheduled()) {
-            viewHolder.schedule.setBackgroundColor(getResources().getColor(R.color.primary_dark_material_dark));
-            viewHolder.schedule.setImageResource(R.drawable.ic_schedule_white_48dp);
-          } else {
-            viewHolder.schedule.setBackgroundColor(getResources().getColor(R.color.white));
+            entryDB.scheduleEntry(entry);
             viewHolder.schedule.setImageResource(R.drawable.ic_schedule_black_48dp);
+          } else {
+            entryDB.deleteEntry(entry);
+            viewHolder.schedule.setImageResource(R.drawable.ic_schedule_white_48dp);
           }
           break;
       }

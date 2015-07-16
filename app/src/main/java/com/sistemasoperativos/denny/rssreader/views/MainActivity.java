@@ -33,13 +33,8 @@ import com.sistemasoperativos.denny.rssreader.models.Producer;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.EmptyStackException;
-import java.util.Iterator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -60,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
+
     super.onCreate(savedInstanceState);
     FETCH_TIME = readFromSharedPreferences();
     setContentView(R.layout.activity_main);
@@ -104,10 +100,12 @@ public class MainActivity extends AppCompatActivity {
     }
     switch (item.getItemId()) {
       case R.id.menu_item_refresh:
-        viewHolder.refreshAnimation(true);
+        viewHolder.refreshAnimation();
         running = false;
-        for (Producer producer: producers)
+        for (Producer producer: producers) {
           producer.setRunning(running);
+          producer.interrupt();
+        }
         producers.clear();
         consumer = null;
         producers = producerDB.getProducers();
@@ -148,34 +146,12 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  public void deleteViewsByCategory(String category) {
-    ArrayList<View> views = new ArrayList<>();
-    ArrayList<Entry> entries = new ArrayList<>();
-    for (int i=0; i<viewHolder.entries.getChildCount(); i++) {
-      Entry entry = (Entry) viewHolder.entries.getChildAt(i).getTag();
-      System.out.println("Entry: " + entry);
-      if (category.equals(entry.getCategory())) {
-        views.add(viewHolder.entries.getChildAt(i));
-        entries.add(entry);
-      }
-    }
-    for (View v : views) {
-      viewHolder.entries.removeView(v);
-    }
-    entryDB.deleteEntries(entries);
-  }
-
   public void checkEmptyList() {
-    boolean empty = true;
-    for (Producer producer : producers){
-      if (producer.isActive()) {
-        empty = false;
-      }
-    }
-    if (empty)
+    if (entryDB.getEntries().isEmpty()) {
       viewHolder.emptyMain.setVisibility(View.VISIBLE);
-    else
+    } else {
       viewHolder.emptyMain.setVisibility(View.GONE);
+    }
   }
 
   public void startConsumer() {
@@ -245,8 +221,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void populateLists() {
+      int count = 0;
       for (Producer producer : producers) {
-        View root = getLayoutInflater().inflate(
+        final View root = getLayoutInflater().inflate(
             R.layout.list_singleline_avatar_text_icon,
             drawerListNoticias,
             false);
@@ -260,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
         else
           item_action.setImageResource(R.drawable.ic_add_black_24dp);
         root.setTag(producer);
+        final int position = count;
         root.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -272,12 +250,17 @@ public class MainActivity extends AppCompatActivity {
               producer.setFetchTime(FETCH_TIME);
               producer.setRunning(true);
               producer.start();
+              producerDB.saveProducer(producer);
+              viewHolder.emptyMain.setVisibility(View.GONE);
             } else {
+              producer.setRunning(false);
+              producer.interrupt();
+              producerDB.saveProducer(producer);
+              producer = producerDB.getProducers().get(position);
+              producers.set(position, producer);
+              root.setTag(producer);
               item_action.setImageResource(R.drawable.ic_add_black_24dp);
-              deleteViewsByCategory(producer.getProducerName());
             }
-            checkEmptyList();
-            producerDB.saveProducer(producer);
           }
         });
 
@@ -295,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
             drawerListVidayEstilo.addView(root);
             break;
         }
-
+        count += 1;
       }
     }
 
@@ -328,21 +311,16 @@ public class MainActivity extends AppCompatActivity {
       tintManager.setTintColor(Color.TRANSPARENT);
     }
 
-    public void refreshAnimation(boolean animation) {
-      if (animation) {
-        int refreshTime = 750;
-        objectAnimator = ObjectAnimator.ofFloat(findViewById(R.id.menu_item_refresh), "rotation", 0.0f, 360f);
-        objectAnimator.setDuration(refreshTime);
-        objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
-        objectAnimator.start();
-      } else {
-        if (objectAnimator != null)
-          objectAnimator.end();
-      }
+    public void refreshAnimation() {
+      int refreshTime = 750;
+      objectAnimator = ObjectAnimator.ofFloat(findViewById(R.id.menu_item_refresh), "rotation", 0.0f, 360f);
+      objectAnimator.setDuration(refreshTime);
+      objectAnimator.setRepeatCount(2);
+      objectAnimator.start();
     }
 
     public void createCard(Entry entry) {
-      viewHolder.refreshAnimation(false);
+
       View card = getLayoutInflater().inflate(R.layout.entry, entries, false);
       card.setTag(entry);
 
@@ -383,7 +361,10 @@ public class MainActivity extends AppCompatActivity {
         }
       });
 
-      entries.addView(card);
+      if (entries.getChildCount()>0)
+        entries.addView(card, 0);
+      else
+        entries.addView(card);
       Log.d(TAG, "CARD created with title:  " + entry.getTitle());
     }
 

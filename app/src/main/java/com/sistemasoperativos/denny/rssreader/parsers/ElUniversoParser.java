@@ -9,6 +9,8 @@ import org.xml.sax.InputSource;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -64,6 +66,11 @@ public class ElUniversoParser {
     } catch (Exception e) {
       System.out.println(e);
     }
+    /*Collections.sort(entries, new Comparator<Entry>() {
+      public int compare(Entry one, Entry other) {
+        return other.getPubDate().compareTo(one.getPubDate());
+      }
+    });*/
     return entries;
   }
 }

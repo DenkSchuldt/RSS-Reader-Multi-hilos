@@ -106,6 +106,7 @@ public class Producer extends Thread {
         entries = new ElUniversoParser().parse(is, name);
         for (Entry entry : entries) {
           entryDB.saveEntry(entry);
+          sleep(50);
         }
         int sleep = fetchTime * 1000 * 60;
         Thread.sleep(sleep);
@@ -123,6 +124,7 @@ public class Producer extends Thread {
   @Override
   public String toString() {
     return "Producer: {\n" +
+        "id: " + this.id + "\n" +
         "Url: " + this.url + "\n" +
         "Name: " + this.name + "\n" +
         "Type: " + this.type + "\n" +

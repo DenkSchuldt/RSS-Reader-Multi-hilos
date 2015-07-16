@@ -45,6 +45,14 @@ public class EntryDB {
     return false;
   }
 
+  public synchronized void scheduleEntry(Entry entry) {
+    try {
+      entryDao.createOrUpdate(entry);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
   public synchronized boolean deleteEntry(Entry entry) {
     try {
       entryDao.delete(entry);
@@ -60,7 +68,7 @@ public class EntryDB {
   public synchronized Entry getEntry() {
     Entry entry = new Entry();
     try {
-      List<Entry> entries = entryDao.query(entryDao.queryBuilder().orderBy(Entry.ID, false).limit(1L).prepare());
+      List<Entry> entries = entryDao.query(entryDao.queryBuilder().limit(1L).prepare());
         if(!entries.isEmpty())
           entry = entries.get(0);
     } catch (SQLException e) {
