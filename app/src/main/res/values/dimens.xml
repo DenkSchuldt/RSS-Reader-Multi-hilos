@@ -25,7 +25,7 @@
 
     <dimen name="text.title">21sp</dimen>
     <dimen name="text.button">15sp</dimen>
-    <dimen name="text.body">15sp</dimen>
+    <dimen name="text.body">16sp</dimen>
 
     <dimen name="button.height">36dp</dimen>
     <dimen name="button.padding">8dp</dimen>

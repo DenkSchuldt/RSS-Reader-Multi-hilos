@@ -6,12 +6,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/entry.detailed.img"
@@ -21,7 +21,6 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_launcher"
                 android:adjustViewBounds="true"/>
-            <!--com.pkmmte.view.CircularImageView-->
             <RelativeLayout
                 android:id="@+id/entry.detailed.header"
                 android:layout_below="@+id/entry.detailed.img"
@@ -33,7 +32,7 @@
                     android:id="@+id/entry.detailed.title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/list.item.primary.text"
+                    android:textSize="@dimen/text.body"
                     android:textColor="@color/white"
                     android:textStyle="bold"/>
                 <TextView
@@ -53,13 +52,13 @@
             </RelativeLayout>
 
             <ImageView
-                android:id="@+id/entry.detailed.close"
+                android:id="@+id/entry.detailed.close.img"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/ic_add_white_48dp"
                 android:rotation="45"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginTop="@dimen/statusbar.height"/>
 
             <ImageView
                 android:id="@+id/entry.detailed.schedule"
@@ -68,13 +67,14 @@
                 android:src="@drawable/ic_schedule_white_48dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginTop="@dimen/statusbar.height"/>
 
             <TextView
                 android:id="@+id/entry.detailed.description"
                 android:layout_below="@+id/entry.detailed.header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/text.body"
                 android:layout_marginTop="@dimen/margin"
                 android:layout_marginLeft="@dimen/margin"
                 android:layout_marginRight="@dimen/margin"/>
@@ -86,6 +86,17 @@
                 android:padding="@dimen/dialog.area.buttons.padding"
                 android:gravity="right">
                 <Button
+                    android:id="@+id/entry.detailed.close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button.height"
+                    android:text="Cerrar"
+                    android:layout_marginRight="@dimen/button.padding"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:background="@null"
+                    android:textSize="@dimen/text.button"
+                    android:textColor="@color/primary"/>
+                <Button
                     android:id="@+id/entry.detailed.more"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/button.height"
@@ -94,7 +105,7 @@
                     android:gravity="center"
                     android:background="@null"
                     android:textSize="@dimen/text.button"
-                    android:textColor="@color/accent"/>
+                    android:textColor="@color/primary"/>
             </LinearLayout>
         </RelativeLayout>
 

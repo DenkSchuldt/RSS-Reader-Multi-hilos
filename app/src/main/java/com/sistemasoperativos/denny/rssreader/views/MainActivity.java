@@ -132,7 +132,7 @@ public class MainActivity extends Base implements OnEntryEvent {
 
   public void startProducers() {
     for (Producer producer: producers) {
-      if (producer.isActive()) {
+      if (producer.isActive() && !producer.isAlive()) {
         producer.setEntryDB(entryDB);
         producer.setFetchTime(FETCH_TIME);
         producer.setRunning(running);
@@ -377,7 +377,7 @@ public class MainActivity extends Base implements OnEntryEvent {
       tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
         @Override
         public int getIndicatorColor(int position) {
-          return getResources().getColor(R.color.accent);
+          return getResources().getColor(R.color.white);
         }
       });
       tabs.setViewPager(pager);

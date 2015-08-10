@@ -6,12 +6,13 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/statusbar.height">
 
             <RelativeLayout
                 android:id="@+id/entry.detailed.header"
@@ -25,8 +26,8 @@
                     android:id="@+id/entry.detailed.title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/list.item.primary.text"
-                    android:text="lalalalal"
+                    android:textSize="@dimen/text.title"
+                    android:text="titulo"
                     android:textColor="@color/black"
                     android:textStyle="bold"/>
                 <TextView
@@ -62,6 +63,7 @@
                 android:layout_below="@+id/entry.detailed.header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/text.body"
                 android:layout_margin="@dimen/margin"/>
 
             <LinearLayout
@@ -80,7 +82,7 @@
                     android:gravity="center"
                     android:background="@null"
                     android:textSize="@dimen/text.button"
-                    android:textColor="@color/accent"/>
+                    android:textColor="@color/primary"/>
                 <Button
                     android:id="@+id/entry.detailed.more"
                     android:layout_width="wrap_content"
@@ -90,7 +92,7 @@
                     android:gravity="center"
                     android:background="@null"
                     android:textSize="@dimen/text.button"
-                    android:textColor="@color/accent"/>
+                    android:textColor="@color/primary"/>
             </LinearLayout>
         </RelativeLayout>
 

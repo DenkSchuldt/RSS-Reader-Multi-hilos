@@ -1,6 +1,6 @@
-# RSS-Reader-Multi-hilos
+# Multiverso
 
-With RSS-Reader you can check the latest news from Diario El Universo, Ecuador.
+With Multiverso you can check the latest news from Diario El Universo, Ecuador.
 
 - Select as many feeds as you want to subscribe.<br/>
 <img src="images/producers.png" width="250">
@@ -47,4 +47,3 @@ $ adb -d install app/build/outputs/apk/app-release.apk
 
 >Material Design Icons by [Google](https://github.com/google) are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 >This project follows the structure suggested by [Futurice](https://github.com/futurice/android-best-practices).
->Operative Systems, first-partial project. Escuela Superior Politécnica del Litoral.

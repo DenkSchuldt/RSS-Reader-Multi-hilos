@@ -1,6 +1,7 @@
 package com.sistemasoperativos.denny.rssreader.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,10 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sistemasoperativos.denny.rssreader.R;
-import com.sistemasoperativos.denny.rssreader.dialogfragments.EntryDialogFragment;
 import com.sistemasoperativos.denny.rssreader.interfaces.OnEntryEvent;
 import com.sistemasoperativos.denny.rssreader.models.Entry;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
+import com.sistemasoperativos.denny.rssreader.views.EntryActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -122,8 +123,9 @@ public class EntriesFragment extends Fragment {
       @Override
       public void onClick(View v) {
         Entry entry = (Entry) v.getTag();
-        EntryDialogFragment edf = EntryDialogFragment.newInstance(entry);
-        edf.show(getActivity().getSupportFragmentManager(), "");
+        Intent detail = new Intent(getActivity(), EntryActivity.class);
+        detail.putExtra(Constants.ENTRY, entry);
+        startActivity(detail);
       }
     });
 
