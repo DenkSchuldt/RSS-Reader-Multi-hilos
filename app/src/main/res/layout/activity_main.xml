@@ -8,45 +8,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.v7.widget.Toolbar
-            android:id="@+id/main.toolbar"
-            android:layout_marginTop="24dp"
+            android:id="@+id/toolbar"
+            style="@style/toolbar"
+            android:elevation="@dimen/elevation"/>
+        <com.sistemasoperativos.denny.rssreader.utils.SlidingTabLayout
+            android:id="@+id/tabs"
+            android:layout_below="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar.height"/>
-        <ScrollView
-            android:layout_below="@+id/main.toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:id="@+id/main.entries"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </ScrollView>
-        <LinearLayout
-            android:id="@+id/empty.main"
-            android:layout_below="@+id/main.toolbar"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="#eeeeee"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/ic_language_black_48dp"/>
-            <TextView
-                android:text="@string/empty.title"
-                android:textSize="@dimen/list.item.primary.text"
-                android:textStyle="bold"
-                android:layout_margin="@dimen/margin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:gravity="center"
-                android:text="@string/empty.message.main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/elevation"
+            android:background="@color/primary"/>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_below="@+id/tabs"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
     </RelativeLayout>
 
     <include layout="@layout/navigation_drawer"/>

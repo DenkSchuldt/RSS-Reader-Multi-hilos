@@ -2,17 +2,31 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/TwoLineListItem"
     android:id="@+id/singlelineAvatarTextIcon"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+    android:background="?android:attr/selectableItemBackground">
 
+    <ImageButton
+        android:id="@+id/item_icon"
+        android:layout_width="@dimen/icon.width"
+        android:layout_height="@dimen/icon.height"
+        android:layout_marginRight="@dimen/margin"
+        android:src="@drawable/ic_ecuador_white_48dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
     <TextView
         android:id="@+id/item_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
+        android:layout_toRightOf="@+id/item_icon"
         android:layout_toLeftOf="@+id/item_action"
         android:text="Item"
         android:textSize="@dimen/list.item.primary.text"
-        android:textColor="@color/primary"
+        android:textColor="@color/white"
         android:fontFamily="sans-serif-medium"
         android:layout_marginLeft="@dimen/margin"
         android:layout_marginRight="@dimen/margin"
@@ -25,8 +39,7 @@
         android:id="@+id/item_action"
         android:layout_width="@dimen/icon.width"
         android:layout_height="@dimen/icon.height"
-        android:src="@drawable/ic_add_black_18dp"
-        android:alpha="0.5"
+        android:src="@drawable/ic_add_white_24dp"
         android:background="@null"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"

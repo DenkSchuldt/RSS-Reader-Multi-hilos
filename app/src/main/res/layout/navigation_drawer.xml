@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/primary.dark"
         android:paddingTop="@dimen/statusbar.height"
         android:paddingBottom="@dimen/statusbar.height">
 

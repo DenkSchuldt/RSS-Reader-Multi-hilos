@@ -133,27 +133,27 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
           false);
 
       Producer futbol = new Producer(
-          Constants.FORO_DE_LECTORES_URL,
+          Constants.FUTBOL_URL,
           context.getString(R.string.feed_deportes_futbol),
           Constants.DEPORTES,
           false);
       Producer campeonato = new Producer(
-          Constants.FORO_DE_LECTORES_URL,
+          Constants.CAMPEONATO_URL,
           context.getString(R.string.feed_deportes_campeonato),
           Constants.DEPORTES,
           false);
       Producer tenis = new Producer(
-          Constants.FORO_DE_LECTORES_URL,
+          Constants.TENIS_URL,
           context.getString(R.string.feed_deportes_tenis),
           Constants.DEPORTES,
           false);
       Producer otrosDeportes = new Producer(
-          Constants.FORO_DE_LECTORES_URL,
+          Constants.OTROS_DEPORTES_URL,
           context.getString(R.string.feed_deportes_otros_deportes),
           Constants.DEPORTES,
           false);
       Producer columnistasDeportes = new Producer(
-          Constants.FORO_DE_LECTORES_URL,
+          Constants.COLUMNISTAS_DEPORTES_URL,
           context.getString(R.string.feed_deportes_columnistas_deportes),
           Constants.DEPORTES,
           false);

@@ -8,7 +8,7 @@ With RSS-Reader you can check the latest news from Diario El Universo, Ecuador.
 - Get the latest news in a list for easy scan.<br/>
 <img src="images/latestnews.png" width="250">
 <br/><br/>
-- You can read the description of an Entry, and even read more!<br/>
+- Read the description of an Entry, and even read more!<br/>
 <img src="images/entry.png" width="250">
 <br/><br/>
 - Also, save some news if you want to read them later.<br/>

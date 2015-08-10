@@ -7,6 +7,10 @@ public interface Constants {
 
   public static final String ENTRY = "entry";
   public static final String WEBVIEW = "webview";
+  public static final String TAG = "tag";
+
+  public static final String LATEST_NEWS = "ultimas_noticias";
+  public static final String SAVED_NEWS = "noticias_guardadas";
 
   public static final String EL_UNIVERSO = "El Universo";
 

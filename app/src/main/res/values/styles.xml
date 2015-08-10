@@ -1,8 +1,18 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary.dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
 
+    <style name="toolbar">
+        <item name="android:background">@color/primary</item>
+        <item name="android:layout_marginTop">@dimen/statusbar.height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbar.height</item>
     </style>
 
     <style name="dialog_fade" >
@@ -24,12 +34,13 @@
     <style name="Subheader" parent="android:Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/subheader.height</item>
-        <item name="android:textColor">@color/subheader</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/subheader.text.size</item>
         <item name="android:fontFamily">@string/font.medium</item>
         <item name="android:gravity">center|left</item>
         <item name="android:layout_marginLeft">@dimen/margin</item>
         <item name="android:layout_marginRight">@dimen/margin</item>
+        <item name="android:alpha">0.5</item>
     </style>
 
     <style name="SingleLineListItem">
@@ -44,8 +55,8 @@
     <style name="TwoLineListItem">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/list.item.twolines.height</item>
-        <item name="android:layout_marginLeft">@dimen/margin</item>
-        <item name="android:layout_marginRight">@dimen/margin</item>
+        <item name="android:paddingLeft">@dimen/margin</item>
+        <item name="android:paddingRight">@dimen/margin</item>
         <item name="android:orientation">vertical</item>
         <item name="android:gravity">center</item>
     </style>
@@ -63,7 +74,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/list.item.secondary.text</item>
-        <item name="android:textColor">@color/secondary</item>
+        <item name="android:textColor">@color/secondary.text</item>
         <item name="android:fontFamily">@string/font.regular</item>
         <item name="android:textStyle">normal</item>
     </style>

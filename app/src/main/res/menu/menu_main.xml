@@ -5,17 +5,12 @@
     <item
         android:id="@+id/menu.item.refresh"
         android:title="@string/menu.action.refresh"
-        android:icon="@drawable/ic_autorenew_black_24dp"
+        android:icon="@drawable/ic_autorenew_white_24dp"
         android:orderInCategory="0"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/menu.item.scheduled"
-        android:title="@string/menu.action.scheduled"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/menu.item.settings"
         android:title="@string/menu.action.settings"
-        android:orderInCategory="200"
+        android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

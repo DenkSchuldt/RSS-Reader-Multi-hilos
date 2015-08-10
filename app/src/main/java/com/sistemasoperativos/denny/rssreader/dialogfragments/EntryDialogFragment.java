@@ -135,7 +135,7 @@ public class EntryDialogFragment extends DialogFragment {
       Picasso.with(getActivity()).load(entry.getImgurl()).into(viewHolder.img);
       Palette.generateAsync(drawableToBitmap(viewHolder.img.getDrawable()), new Palette.PaletteAsyncListener() {
         public void onGenerated(Palette palette) {
-          viewHolder.header.setBackgroundColor(palette.getMutedColor(R.color.secondary));
+          viewHolder.header.setBackgroundColor(palette.getMutedColor(R.color.secondary_text));
         }
       });
     }

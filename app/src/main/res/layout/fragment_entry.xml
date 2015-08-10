@@ -94,7 +94,7 @@
                     android:gravity="center"
                     android:background="@null"
                     android:textSize="@dimen/text.button"
-                    android:textColor="@color/teal"/>
+                    android:textColor="@color/accent"/>
             </LinearLayout>
         </RelativeLayout>
 

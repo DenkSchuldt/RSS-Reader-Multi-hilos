@@ -38,9 +38,9 @@
     <string name="feed.vida.y.estilo.salud">Salud</string>
     <string name="feed.vida.y.estilo.gente">Gente</string>
 
-    <string name="app_name">RSS Reader Multi-hilos</string>
-    <string name="shared.preferences.key">com.sistemasoperativos.denny.rssreader</string>
-    <string name="shared.preferences.settings.time">settings</string>
+    <string name="app_name">Multvierso</string>
+    <string name="shared.preferences.key">com.denny.multiverso</string>
+    <string name="shared.preferences.settings.time">settings.time</string>
 
     <string name="actionbar.title.main">Últimas noticias</string>
     <string name="actionbar.title.scheduled">Noticias guardadas</string>

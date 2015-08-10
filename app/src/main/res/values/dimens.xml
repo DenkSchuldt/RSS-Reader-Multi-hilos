@@ -1,6 +1,6 @@
 <resources>
 
-    <dimen name="statusbar.height">24dp</dimen>
+    <dimen name="statusbar.height">25dp</dimen>
     <dimen name="toolbar.height">56dp</dimen>
 
     <dimen name="drawer.width">320dp</dimen>
@@ -36,5 +36,7 @@
     <dimen name="dialog.tittle.padding.bottom">20dp</dimen>
     <dimen name="dialog.width">300dp</dimen>
     <dimen name="dialog.height">300dp</dimen>
+
+    <dimen name="elevation">4dp</dimen>
 
 </resources>

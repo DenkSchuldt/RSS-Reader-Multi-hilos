@@ -1,61 +1,60 @@
+
 package com.sistemasoperativos.denny.rssreader.views;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.database.DBHelper;
 import com.sistemasoperativos.denny.rssreader.database.db.EntryDB;
 import com.sistemasoperativos.denny.rssreader.database.db.ProducerDB;
-import com.sistemasoperativos.denny.rssreader.dialogfragments.EntryDialogFragment;
+import com.sistemasoperativos.denny.rssreader.fragments.EntriesFragment;
+import com.sistemasoperativos.denny.rssreader.interfaces.OnEntryEvent;
 import com.sistemasoperativos.denny.rssreader.models.Entry;
 import com.sistemasoperativos.denny.rssreader.models.Producer;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
-import com.squareup.picasso.Picasso;
+import com.sistemasoperativos.denny.rssreader.utils.SlidingTabLayout;
+import com.sistemasoperativos.denny.rssreader.views.adapters.ViewPagerAdapter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Base implements OnEntryEvent {
 
-  public static final String TAG = "MainActivity";
+  private EntryDB entryDB;
+  private ProducerDB producerDB;
 
   private ViewHolder viewHolder;
+  private ViewPagerAdapter adapter;
+  private ObjectAnimator objectAnimator;
   private ActionBarDrawerToggle drawerToggle;
-  private ProducerDB producerDB;
-  private EntryDB entryDB;
 
   private boolean running;
   private Thread consumer;
   private ArrayList<Producer> producers;
-  private ArrayList<Entry> entries;
 
   public int FETCH_TIME;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-
     super.onCreate(savedInstanceState);
     FETCH_TIME = readFromSharedPreferences();
     setContentView(R.layout.activity_main);
@@ -63,22 +62,16 @@ public class MainActivity extends AppCompatActivity {
     DBHelper helper = OpenHelperManager.getHelper(MainActivity.this, DBHelper.class);
     entryDB = new EntryDB(helper);
     producerDB = new ProducerDB(helper);
+
     producers = producerDB.getProducers();
-    entries = new ArrayList<>();
     running = true;
 
     viewHolder = new ViewHolder();
     viewHolder.findActivityViews();
-    viewHolder.populateLists();
-    viewHolder.setCustomDrawerToggle();
-    viewHolder.setCustomActionBar();
-    viewHolder.setCustomStatusBar();
 
-    checkEmptyList();
-
-    startProducers();
-    startConsumer();
-
+    populateNavigationDrawer();
+    setCustomDrawerToggle();
+    setToolbar();
   }
 
   @Override
@@ -100,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     }
     switch (item.getItemId()) {
       case R.id.menu_item_refresh:
-        viewHolder.refreshAnimation();
+        refreshAnimation();
         running = false;
         for (Producer producer: producers) {
           producer.setRunning(running);
@@ -113,15 +106,9 @@ public class MainActivity extends AppCompatActivity {
         startProducers();
         startConsumer();
         break;
-      case R.id.menu_item_scheduled:
-        Intent scheduled = new Intent(this, ScheduledActivity.class);
-        startActivity(scheduled);
-        overridePendingTransition(R.anim.left_in, R.anim.left_out);
-        return true;
       case R.id.menu_item_settings:
         Intent settings = new Intent(this, SettingsActivity.class);
         startActivity(settings);
-        overridePendingTransition(R.anim.left_in, R.anim.left_out);
         return true;
       default:
     }
@@ -135,6 +122,14 @@ public class MainActivity extends AppCompatActivity {
     return super.onCreateOptionsMenu(menu);
   }
 
+  @Override
+  public void updateContent(String tag) {
+    if (tag.equals(Constants.SAVED_NEWS)) {
+      startProducers();
+      startConsumer();
+    }
+  }
+
   public void startProducers() {
     for (Producer producer: producers) {
       if (producer.isActive()) {
@@ -146,13 +141,13 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  public void checkEmptyList() {
+  /*public void checkEmptyList() {
     if (entryDB.getEntries().isEmpty()) {
       viewHolder.emptyMain.setVisibility(View.VISIBLE);
     } else {
       viewHolder.emptyMain.setVisibility(View.GONE);
     }
-  }
+  }*/
 
   public void startConsumer() {
     consumer = new Thread(new Runnable() {
@@ -162,14 +157,14 @@ public class MainActivity extends AppCompatActivity {
         while (running) {
           final ArrayList<Entry> received = entryDB.getEntries();
           for (final Entry entry : received) {
-            if (!entry.isEmpty() && !entryExits(entry)) {
-              entries.add(entry);
-              runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                  viewHolder.createCard(entry);
-                }
-              });
+            if (!entry.isEmpty()) {
+              if (entry.isScheduled()) {
+                EntriesFragment entriesFragment = adapter.getFragments().get(1);
+                entriesFragment.updateContent(entry);
+              } else {
+                EntriesFragment entriesFragment = adapter.getFragments().get(0);
+                entriesFragment.updateContent(entry);
+              }
             }
           }
         }
@@ -179,18 +174,181 @@ public class MainActivity extends AppCompatActivity {
     consumer.start();
   }
 
-  public boolean entryExits(Entry entry) {
-    for (Entry e : entries) {
-      if (e.getTitle().equals(entry.getTitle()))
-        return true;
+  public void populateNavigationDrawer() {
+    int count = 0;
+    for (Producer producer : producers) {
+      final View root = getLayoutInflater().inflate(
+          R.layout.list_singleline_avatar_text_icon,
+          viewHolder.drawerListNoticias,
+          false);
+      ImageView item_icon = (ImageView) root.findViewById(R.id.item_icon);
+      TextView item_text = (TextView) root.findViewById(R.id.item_text);
+      final ImageView item_action = (ImageView) root.findViewById(R.id.item_action);
+
+      if (producer.getProducerName().equals(getString(R.string.feed_noticias_migrantes))) {
+        item_icon.setImageResource(R.drawable.ic_migrantes_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_entrevistas))) {
+        item_icon.setImageResource(R.drawable.ic_entrevistas_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_viva_alborada))) {
+        item_icon.setImageResource(R.drawable.ic_viva_alborada_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_viva_norte))) {
+        item_icon.setImageResource(R.drawable.ic_viva_norte_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_viva_sambo))) {
+        item_icon.setImageResource(R.drawable.ic_viva_sambo_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_politica))) {
+        item_icon.setImageResource(R.drawable.ic_politica_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_economia))) {
+        item_icon.setImageResource(R.drawable.ic_economia_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_ecuador))) {
+        item_icon.setImageResource(R.drawable.ic_ecuador_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_internacional))) {
+        item_icon.setImageResource(R.drawable.ic_internacional_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_gran_guayaquil))) {
+        item_icon.setImageResource(R.drawable.ic_gran_guayaquil_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_informes))) {
+        item_icon.setImageResource(R.drawable.ic_informes_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_seguridad))) {
+        item_icon.setImageResource(R.drawable.ic_seguridad_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_noticias_viva))) {
+        item_icon.setImageResource(R.drawable.ic_viva_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_opinion_columnistas))) {
+        item_icon.setImageResource(R.drawable.ic_columnistas_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_opinion_editoriales))) {
+        item_icon.setImageResource(R.drawable.ic_editoriales_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_opinion_cartas_al_director))) {
+        item_icon.setImageResource(R.drawable.ic_cartas_al_director_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_opinion_caricaturas))) {
+        item_icon.setImageResource(R.drawable.ic_caricaturas_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_opinion_foro_de_lectores))) {
+        item_icon.setImageResource(R.drawable.ic_foro_de_lectores_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_deportes_futbol))) {
+        item_icon.setImageResource(R.drawable.ic_futbol_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_deportes_campeonato))) {
+        item_icon.setImageResource(R.drawable.ic_campeonato_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_deportes_tenis))) {
+        item_icon.setImageResource(R.drawable.ic_tenis_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_deportes_otros_deportes))) {
+        item_icon.setImageResource(R.drawable.ic_otros_deportes_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_deportes_columnistas_deportes))) {
+        item_icon.setImageResource(R.drawable.ic_columnistas_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_vida_y_estilo_intercultural))) {
+        item_icon.setImageResource(R.drawable.ic_intercultural_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_vida_y_estilo_tendencias))) {
+        item_icon.setImageResource(R.drawable.ic_tendencias_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_vida_y_estilo_tecnologia))) {
+        item_icon.setImageResource(R.drawable.ic_tecnologia_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_vida_y_estilo_cultura))) {
+        item_icon.setImageResource(R.drawable.ic_cultura_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_vida_y_estilo_ecologia))) {
+        item_icon.setImageResource(R.drawable.ic_ecologia_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_vida_y_estilo_cine_y_tv))) {
+        item_icon.setImageResource(R.drawable.ic_cine_y_tv_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_vida_y_estilo_musica))) {
+        item_icon.setImageResource(R.drawable.ic_musica_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_vida_y_estilo_salud))) {
+        item_icon.setImageResource(R.drawable.ic_salud_white_48dp);
+      } else if (producer.getProducerName().equals(getString(R.string.feed_vida_y_estilo_gente))) {
+        item_icon.setImageResource(R.drawable.ic_gente_white_48dp);
+      }
+
+      item_text.setText(producer.getProducerName());
+      if (producer.isActive())
+        item_action.setImageResource(R.drawable.ic_remove_white_24dp);
+      else
+        item_action.setImageResource(R.drawable.ic_add_white_24dp);
+      root.setTag(producer);
+      final int position = count;
+      root.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Producer producer = (Producer) v.getTag();
+          final ImageView item_action = (ImageView) v.findViewById(R.id.item_action);
+          producer.setActive(!producer.isActive());
+          if (producer.isActive()) {
+            changeDrawerOptionIcon(item_action, true);
+            producer.setEntryDB(entryDB);
+            producer.setFetchTime(FETCH_TIME);
+            producer.setRunning(true);
+            producer.start();
+            producerDB.saveProducer(producer);
+            //viewHolder.emptyMain.setVisibility(View.GONE);
+          } else {
+            changeDrawerOptionIcon(item_action, false);
+            producer.setRunning(false);
+            producer.interrupt();
+            producerDB.saveProducer(producer);
+            producer = producerDB.getProducers().get(position);
+            producers.set(position, producer);
+            root.setTag(producer);
+          }
+        }
+      });
+
+      switch (producer.getProducerType()) {
+        case Constants.NOTICIAS:
+          viewHolder.drawerListNoticias.addView(root);
+          break;
+        case Constants.OPINION:
+          viewHolder.drawerListOpinion.addView(root);
+          break;
+        case Constants.DEPORTES:
+          viewHolder.drawerListDeportes.addView(root);
+          break;
+        case Constants.VIDA_Y_ESTILO:
+          viewHolder.drawerListVidayEstilo.addView(root);
+          break;
+      }
+      count += 1;
     }
-    return false;
+  }
+
+  public void setCustomDrawerToggle() {
+    drawerToggle = new ActionBarDrawerToggle(MainActivity.this, viewHolder.drawerLayout, viewHolder.toolbar, 0, 0) {
+      public void onDrawerClosed(View view) { super.onDrawerClosed(view); }
+      public void onDrawerOpened(View drawerView) { super.onDrawerOpened(drawerView); }
+      public void onDrawerSlide(View drawerView, float slideOffset) {
+        super.onDrawerSlide(drawerView, 0);
+      }
+    };
+    drawerToggle.setDrawerIndicatorEnabled(true);
+    viewHolder.drawerLayout.setDrawerListener(drawerToggle);
+  }
+
+  public void setToolbar() {
+    setSupportActionBar(viewHolder.toolbar);
+    getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+  }
+
+  public void refreshAnimation() {
+    int refreshTime = 750;
+    objectAnimator = ObjectAnimator.ofFloat(findViewById(R.id.menu_item_refresh), "rotation", 0.0f, 360f);
+    objectAnimator.setDuration(refreshTime);
+    objectAnimator.setRepeatCount(2);
+    objectAnimator.start();
+  }
+
+  public void changeDrawerOptionIcon(final ImageView imageView, final boolean plus) {
+    int refreshTime = 100;
+    objectAnimator = ObjectAnimator.ofFloat(imageView, "rotation", 0.0f, 90f);
+    objectAnimator.setDuration(refreshTime);
+    objectAnimator.addListener(new AnimatorListenerAdapter() {
+      @Override
+      public void onAnimationEnd(Animator animation) {
+        super.onAnimationEnd(animation);
+        if (plus) {
+          imageView.setImageResource(R.drawable.ic_remove_white_24dp);
+        } else {
+          imageView.setImageResource(R.drawable.ic_add_white_24dp);
+        }
+        imageView.setRotation(180f);
+      }
+    });
+    objectAnimator.start();
   }
 
   public int readFromSharedPreferences() {
     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
     int time = sharedPref.getInt(getString(R.string.shared_preferences_settings_time), 1);
-    System.out.println("TIME: " + time);
     return time;
   }
 
@@ -201,171 +359,32 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
-    private LinearLayout entries;
-    private LinearLayout emptyMain;
+    private SlidingTabLayout tabs;
+    private ViewPager pager;
     private LinearLayout drawerListNoticias;
     private LinearLayout drawerListOpinion;
     private LinearLayout drawerListDeportes;
     private LinearLayout drawerListVidayEstilo;
-    private ObjectAnimator objectAnimator;
 
     public void findActivityViews() {
       drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-      toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-      entries = (LinearLayout) findViewById(R.id.main_entries);
-      emptyMain = (LinearLayout) findViewById(R.id.empty_main);
+      toolbar = (Toolbar) findViewById(R.id.toolbar);
+      tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+      tabs.setDistributeEvenly(true);
+      pager = (ViewPager) findViewById(R.id.pager);
+      adapter =  new ViewPagerAdapter(getSupportFragmentManager());
+      pager.setAdapter(adapter);
+      tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+        @Override
+        public int getIndicatorColor(int position) {
+          return getResources().getColor(R.color.accent);
+        }
+      });
+      tabs.setViewPager(pager);
       drawerListNoticias = (LinearLayout) findViewById(R.id.drawer_list_noticias);
       drawerListOpinion = (LinearLayout) findViewById(R.id.drawer_list_opinion);
       drawerListDeportes = (LinearLayout) findViewById(R.id.drawer_list_deportes);
       drawerListVidayEstilo = (LinearLayout) findViewById(R.id.drawer_list_vida_y_estilo);
-    }
-
-    public void populateLists() {
-      int count = 0;
-      for (Producer producer : producers) {
-        final View root = getLayoutInflater().inflate(
-            R.layout.list_singleline_avatar_text_icon,
-            drawerListNoticias,
-            false);
-        root.setId(0);
-        TextView item_text = (TextView) root.findViewById(R.id.item_text);
-        final ImageView item_action = (ImageView) root.findViewById(R.id.item_action);
-
-        item_text.setText(producer.getProducerName());
-        if (producer.isActive())
-          item_action.setImageResource(R.drawable.ic_remove_black_24dp);
-        else
-          item_action.setImageResource(R.drawable.ic_add_black_24dp);
-        root.setTag(producer);
-        final int position = count;
-        root.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            Producer producer = (Producer) v.getTag();
-            ImageView item_action = (ImageView) v.findViewById(R.id.item_action);
-            producer.setActive(!producer.isActive());
-            if (producer.isActive()) {
-              item_action.setImageResource(R.drawable.ic_remove_black_24dp);
-              producer.setEntryDB(entryDB);
-              producer.setFetchTime(FETCH_TIME);
-              producer.setRunning(true);
-              producer.start();
-              producerDB.saveProducer(producer);
-              viewHolder.emptyMain.setVisibility(View.GONE);
-            } else {
-              producer.setRunning(false);
-              producer.interrupt();
-              producerDB.saveProducer(producer);
-              producer = producerDB.getProducers().get(position);
-              producers.set(position, producer);
-              root.setTag(producer);
-              item_action.setImageResource(R.drawable.ic_add_black_24dp);
-            }
-          }
-        });
-
-        switch (producer.getProducerType()) {
-          case Constants.NOTICIAS:
-            drawerListNoticias.addView(root);
-            break;
-          case Constants.OPINION:
-            drawerListOpinion.addView(root);
-            break;
-          case Constants.DEPORTES:
-            drawerListDeportes.addView(root);
-            break;
-          case Constants.VIDA_Y_ESTILO:
-            drawerListVidayEstilo.addView(root);
-            break;
-        }
-        count += 1;
-      }
-    }
-
-    public void setCustomDrawerToggle() {
-      drawerToggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, toolbar, 0, 0) {
-        public void onDrawerClosed(View view) { super.onDrawerClosed(view); }
-        public void onDrawerOpened(View drawerView) { super.onDrawerOpened(drawerView); }
-        public void onDrawerSlide(View drawerView, float slideOffset) {
-          super.onDrawerSlide(drawerView, 0);
-        }
-      };
-      drawerToggle.setDrawerIndicatorEnabled(true);
-      drawerLayout.setDrawerListener(drawerToggle);
-    }
-
-    public void setCustomActionBar() {
-      setSupportActionBar(viewHolder.toolbar);
-      getSupportActionBar().setTitle(getResources().getString(R.string.actionbar_title_main));
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    public void setCustomStatusBar() {
-      getWindow().setFlags(
-          WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-          WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-      );
-      getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-      SystemBarTintManager tintManager = new SystemBarTintManager(MainActivity.this);
-      tintManager.setStatusBarTintEnabled(true);
-      tintManager.setTintColor(Color.TRANSPARENT);
-    }
-
-    public void refreshAnimation() {
-      int refreshTime = 750;
-      objectAnimator = ObjectAnimator.ofFloat(findViewById(R.id.menu_item_refresh), "rotation", 0.0f, 360f);
-      objectAnimator.setDuration(refreshTime);
-      objectAnimator.setRepeatCount(2);
-      objectAnimator.start();
-    }
-
-    public void createCard(Entry entry) {
-
-      View card = getLayoutInflater().inflate(R.layout.entry, entries, false);
-      card.setTag(entry);
-
-      TextView title = (TextView) card.findViewById(R.id.entry_title);
-      TextView category = (TextView) card.findViewById(R.id.entry_category);
-      TextView time = (TextView) card.findViewById(R.id.entry_time);
-      ImageView media = (ImageView) card.findViewById(R.id.entry_media);
-
-      title.setText(entry.getTitle());
-      category.setText(entry.getCategory());
-
-      String pubDate = entry.getPubDate();
-      String[] date = pubDate.split("\\s+");
-
-      Calendar calendar = Calendar.getInstance();
-      int day = calendar.get(Calendar.DAY_OF_MONTH);
-      int pubDay = Integer.parseInt(date[1]);
-
-      if (pubDay == day)
-        time.setText("Hoy, " + date[4].substring(0,5));
-      else if (pubDay == day-1)
-        time.setText("Ayer, " + date[4].substring(0,5));
-      else
-        time.setText(date[2] + " " + date[1] + ", " + date[4].substring(0,5));
-
-      if (!entry.getImgurl().isEmpty()) {
-        Picasso.with(MainActivity.this).load(entry.getImgurl()).into(media);
-      } else {
-        media.setVisibility(View.GONE);
-      }
-
-      card.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          Entry entry = (Entry) v.getTag();
-          EntryDialogFragment edf = EntryDialogFragment.newInstance(entry);
-          edf.show(getSupportFragmentManager(), "");
-        }
-      });
-
-      if (entries.getChildCount()>0)
-        entries.addView(card, 0);
-      else
-        entries.addView(card);
-      Log.d(TAG, "CARD created with title:  " + entry.getTitle());
     }
 
   }

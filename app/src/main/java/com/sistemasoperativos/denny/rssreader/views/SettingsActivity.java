@@ -20,7 +20,7 @@ import com.sistemasoperativos.denny.rssreader.dialogfragments.FetchDialogFragmen
 /**
  * Created by denny on 27/06/15.
  */
-public class SettingsActivity extends AppCompatActivity implements OnSettingsEvent {
+public class SettingsActivity extends Base implements OnSettingsEvent {
 
   public static final String SETTINGS_FETCH_TIME = "settingsFetchTime";
 
@@ -33,19 +33,6 @@ public class SettingsActivity extends AppCompatActivity implements OnSettingsEve
     viewHolder = new ViewHolder();
     viewHolder.findActivityViews();
     setCustomActionBar();
-    setCustomStatusBar();
-  }
-
-  @Override
-  public void onBackPressed() {
-    super.onBackPressed();
-    overridePendingTransition(R.anim.right_in, R.anim.right_out);
-  }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-    overridePendingTransition(R.anim.right_in, R.anim.right_out);
   }
 
   @Override
@@ -57,17 +44,6 @@ public class SettingsActivity extends AppCompatActivity implements OnSettingsEve
     setSupportActionBar(viewHolder.toolbar);
     getSupportActionBar().setTitle(getResources().getString(R.string.actionbar_title_settings));
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-  }
-
-  public void setCustomStatusBar() {
-    getWindow().setFlags(
-        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-    );
-    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-    SystemBarTintManager tintManager = new SystemBarTintManager(this);
-    tintManager.setStatusBarTintEnabled(true);
-    tintManager.setTintColor(Color.TRANSPARENT);
   }
 
   public void updateFetchTime() {
