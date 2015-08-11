@@ -9,6 +9,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,6 +26,7 @@ import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.database.DBHelper;
 import com.sistemasoperativos.denny.rssreader.database.db.EntryDB;
 import com.sistemasoperativos.denny.rssreader.models.Entry;
+import com.sistemasoperativos.denny.rssreader.models.Producer;
 import com.sistemasoperativos.denny.rssreader.utils.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -32,6 +37,7 @@ import java.util.Calendar;
  */
 public class EntryActivity extends AppCompatActivity {
 
+  private Menu menu;
   private Entry entry;
   private ViewHolder viewHolder;
   private EntryDB entryDB;
@@ -50,7 +56,50 @@ public class EntryActivity extends AppCompatActivity {
     viewHolder = new ViewHolder();
     viewHolder.findActivityViews();
     setCustomStatusBar();
+    setToolbar();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
     updateContent();
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    if (entry.getImgurl().isEmpty())
+      inflater.inflate(R.menu.menu_entry_no_image, menu);
+    else
+      inflater.inflate(R.menu.menu_entry, menu);
+    this.menu = menu;
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_item_save:
+        entry.setScheduled(!entry.isScheduled());
+        if (entry.isScheduled()) {
+          entryDB.scheduleEntry(entry);
+          if (entry.getImgurl().isEmpty())
+            menu.getItem(1).setIcon(R.drawable.ic_bookmark_black_24dp);
+          else
+            menu.getItem(1).setIcon(R.drawable.ic_bookmark_white_24dp);
+        } else {
+          entryDB.deleteEntry(entry);
+          if (entry.getImgurl().isEmpty())
+            menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+          else
+            menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_white_24dp);
+        }
+        break;
+      case R.id.menu_item_share:
+        System.out.println("SHARE");
+      default:
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   /**
@@ -62,7 +111,6 @@ public class EntryActivity extends AppCompatActivity {
       Palette.generateAsync(drawableToBitmap(viewHolder.img.getDrawable()), new Palette.PaletteAsyncListener() {
         public void onGenerated(Palette palette) {
           viewHolder.header.setBackgroundColor(palette.getMutedColor(R.color.secondary_text));
-          viewHolder.closeBtn.setTextColor(palette.getMutedColor(R.color.secondary_text));
           viewHolder.more.setTextColor(palette.getMutedColor(R.color.secondary_text));
         }
       });
@@ -70,7 +118,7 @@ public class EntryActivity extends AppCompatActivity {
     viewHolder.sourceName.setText(entry.getSource());
     viewHolder.title.setText(entry.getTitle());
     viewHolder.description.setText(entry.getDescription());
-
+    
     String pubDate = entry.getPubDate();
     String[] date = pubDate.split("\\s+");
     Calendar calendar = Calendar.getInstance();
@@ -82,12 +130,11 @@ public class EntryActivity extends AppCompatActivity {
       viewHolder.time.setText("Ayer, " + date[4].substring(0,5));
     else
       viewHolder.time.setText(date[2] + " " + date[1] + ", " + date[4].substring(0,5));
-
-    if (entry.isScheduled()) {
-      viewHolder.schedule.setImageResource(R.drawable.ic_schedule_black_48dp);
-    }
   }
 
+  /**
+   *
+   */
   public void setCustomStatusBar() {
     getWindow().setFlags(
         WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
@@ -99,6 +146,16 @@ public class EntryActivity extends AppCompatActivity {
     tintManager.setTintColor(Color.TRANSPARENT);
   }
 
+  /**
+   *
+   */
+  public void setToolbar() {
+    setSupportActionBar(viewHolder.toolbar);
+    getSupportActionBar().setTitle("");
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    if (entry.getImgurl().isEmpty())
+    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
+  }
 
   /**
    *
@@ -129,59 +186,36 @@ public class EntryActivity extends AppCompatActivity {
    */
   public class ViewHolder implements View.OnClickListener {
 
+    public Toolbar toolbar;
     public TextView title;
     public ImageView img;
-    public ImageView closeImg;
     public RelativeLayout header;
-    public ImageView schedule;
     public TextView sourceName;
     public TextView description;
     public TextView time;
-    public Button closeBtn;
     public Button more;
 
     public void findActivityViews() {
       if (!entry.getImgurl().isEmpty()) {
-        img = (ImageView) findViewById(R.id.entry_detailed_img);
-        closeImg = (ImageView) findViewById(R.id.entry_detailed_close_img);
-        closeImg.setOnClickListener(this);
+        img = (ImageView) findViewById(R.id.img);
       }
-
-      header = (RelativeLayout) findViewById(R.id.entry_detailed_header);
-      title = (TextView) findViewById(R.id.entry_detailed_title);
-      schedule = (ImageView) findViewById(R.id.entry_detailed_schedule);
-      sourceName = (TextView) findViewById(R.id.entry_detailed_source_name);
-      description = (TextView) findViewById(R.id.entry_detailed_description);
-      time = (TextView) findViewById(R.id.entry_detailed_time);
-      closeBtn = (Button) findViewById(R.id.entry_detailed_close);
-      more = (Button) findViewById(R.id.entry_detailed_more);
-
-      schedule.setOnClickListener(this);
-      closeBtn.setOnClickListener(this);
+      toolbar = (Toolbar) findViewById(R.id.toolbar);
+      header = (RelativeLayout) findViewById(R.id.header);
+      title = (TextView) findViewById(R.id.title);
+      sourceName = (TextView) findViewById(R.id.source_name);
+      description = (TextView) findViewById(R.id.description);
+      time = (TextView) findViewById(R.id.time);
+      more = (Button) findViewById(R.id.more);
       more.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
       switch (v.getId()) {
-        case R.id.entry_detailed_close_img:
-        case R.id.entry_detailed_close:
-          finish();
-          break;
-        case R.id.entry_detailed_more:
+        case R.id.more:
           Intent web = new Intent(EntryActivity.this, WebActivity.class);
           web.putExtra(Constants.ENTRY, entry);
           startActivity(web);
-          break;
-        case R.id.entry_detailed_schedule:
-          entry.setScheduled(!entry.isScheduled());
-          if (entry.isScheduled()) {
-            entryDB.scheduleEntry(entry);
-            viewHolder.schedule.setImageResource(R.drawable.ic_schedule_black_48dp);
-          } else {
-            entryDB.deleteEntry(entry);
-            viewHolder.schedule.setImageResource(R.drawable.ic_schedule_white_48dp);
-          }
           break;
       }
     }

@@ -21,12 +21,17 @@
         <activity
             android:name=".views.MainActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".views.EntryActivity"
             android:screenOrientation="portrait"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:parentActivityName=".views.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".views.MainActivity" />
         </activity>
         <activity
             android:name=".views.SettingsActivity"

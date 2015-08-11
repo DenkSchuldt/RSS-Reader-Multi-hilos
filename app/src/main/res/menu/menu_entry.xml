@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".EntryActivity">
+    <item
+        android:id="@+id/menu.item.share"
+        android:title="@string/menu.action.refresh"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:orderInCategory="0"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu.item.save"
+        android:title="@string/menu.action.refresh"
+        android:icon="@drawable/ic_bookmark_border_white_24dp"
+        android:orderInCategory="0"
+        app:showAsAction="always"/>
+</menu>
