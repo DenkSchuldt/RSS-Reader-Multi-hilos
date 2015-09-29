@@ -1,18 +1,15 @@
 package com.sistemasoperativos.denny.rssreader.views;
 
-import android.content.Context;
+
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sistemasoperativos.denny.rssreader.interfaces.OnSettingsEvent;
 import com.sistemasoperativos.denny.rssreader.R;
 import com.sistemasoperativos.denny.rssreader.dialogfragments.FetchDialogFragment;
@@ -20,7 +17,7 @@ import com.sistemasoperativos.denny.rssreader.dialogfragments.FetchDialogFragmen
 /**
  * Created by denny on 27/06/15.
  */
-public class SettingsActivity extends Base implements OnSettingsEvent {
+public class SettingsActivity extends AppCompatActivity implements OnSettingsEvent {
 
   public static final String SETTINGS_FETCH_TIME = "settingsFetchTime";
 

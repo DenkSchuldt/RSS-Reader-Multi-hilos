@@ -9,9 +9,11 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,7 +39,7 @@ import com.sistemasoperativos.denny.rssreader.views.adapters.ViewPagerAdapter;
 import java.util.ArrayList;
 
 
-public class MainActivity extends Base implements OnEntryEvent {
+public class MainActivity extends AppCompatActivity implements OnEntryEvent {
 
   private EntryDB entryDB;
   private ProducerDB producerDB;
@@ -359,8 +361,8 @@ public class MainActivity extends Base implements OnEntryEvent {
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
-    private SlidingTabLayout tabs;
-    private ViewPager pager;
+    private TabLayout tabs;
+    private ViewPager viewPager;
     private LinearLayout drawerListNoticias;
     private LinearLayout drawerListOpinion;
     private LinearLayout drawerListDeportes;
@@ -369,18 +371,11 @@ public class MainActivity extends Base implements OnEntryEvent {
     public void findActivityViews() {
       drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
       toolbar = (Toolbar) findViewById(R.id.toolbar);
-      tabs = (SlidingTabLayout) findViewById(R.id.tabs);
-      tabs.setDistributeEvenly(true);
-      pager = (ViewPager) findViewById(R.id.pager);
+      viewPager = (ViewPager) findViewById(R.id.pager);
       adapter =  new ViewPagerAdapter(getSupportFragmentManager());
-      pager.setAdapter(adapter);
-      tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-        @Override
-        public int getIndicatorColor(int position) {
-          return getResources().getColor(R.color.white);
-        }
-      });
-      tabs.setViewPager(pager);
+      viewPager.setAdapter(adapter);
+      tabs = (TabLayout) findViewById(R.id.tabs);
+      tabs.setupWithViewPager(viewPager);
       drawerListNoticias = (LinearLayout) findViewById(R.id.drawer_list_noticias);
       drawerListOpinion = (LinearLayout) findViewById(R.id.drawer_list_opinion);
       drawerListDeportes = (LinearLayout) findViewById(R.id.drawer_list_deportes);

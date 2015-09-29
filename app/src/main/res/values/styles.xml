@@ -10,7 +10,6 @@
 
     <style name="toolbar">
         <item name="android:background">@color/primary</item>
-        <item name="android:layout_marginTop">@dimen/statusbar.height</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/toolbar.height</item>
     </style>

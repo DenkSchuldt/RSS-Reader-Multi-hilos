@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:id="@+id/entry.detailed.header"
+                android:layout_toLeftOf="@+id/entry.detailed.schedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginRight="@dimen/margin"
+                android:layout_marginLeft="@dimen/margin">
+                <TextView
+                    android:id="@+id/entry.detailed.title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/list.item.primary.text"
+                    android:text="lalalalal"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/entry.detailed.source.name"
+                    android:layout_below="@+id/entry.detailed.title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="El Universo"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/entry.detailed.time"
+                    android:layout_below="@+id/entry.detailed.title"
+                    android:layout_toRightOf="@+id/entry.detailed.source.name"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:layout_marginRight="@dimen/margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="12min"/>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/entry.detailed.schedule"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_schedule_black_48dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/margin"
+                android:layout_marginTop="@dimen/margin"/>
+
+            <TextView
+                android:id="@+id/entry.detailed.description"
+                android:layout_below="@+id/entry.detailed.header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin"/>
+
+            <LinearLayout
+                android:layout_below="@+id/entry.detailed.description"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dialog.area.buttons.height"
+                android:padding="@dimen/dialog.area.buttons.padding"
+                android:gravity="right">
+                <Button
+                    android:id="@+id/entry.detailed.close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button.height"
+                    android:text="Cerrar"
+                    android:layout_marginRight="@dimen/button.padding"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:background="@null"
+                    android:textSize="@dimen/text.button"
+                    android:textColor="@color/accent"/>
+                <Button
+                    android:id="@+id/entry.detailed.more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button.height"
+                    android:text="Leer más"
+                    android:padding="@dimen/button.padding"
+                    android:gravity="center"
+                    android:background="@null"
+                    android:textSize="@dimen/text.button"
+                    android:textColor="@color/accent"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
